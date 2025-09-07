@@ -1,0 +1,217 @@
+name: ✨ Feature Request
+description: Suggereix una nova funcionalitat per l'aplicació
+title: "[FEATURE] "
+labels: ["enhancement", "feature-request"]
+assignees: []
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## ✨ Gràcies per suggerir una nova funcionalitat!
+        
+        Les teves idees ens ajuden a millorar l'aplicació. Si us plau, proporciona tants detalls com sigui possible.
+
+  - type: checkboxes
+    id: prerequisites
+    attributes:
+      label: ✅ Prerequisits
+      description: Si us plau, confirma que has fet el següent
+      options:
+        - label: He cercat en issues existents per assegurar-me que aquesta funcionalitat no s'ha suggerit abans
+          required: true
+        - label: He llegit la documentació i roadmap del projecte
+          required: true
+        - label: Aquesta funcionalitat està alineada amb els objectius del projecte
+          required: true
+
+  - type: textarea
+    id: feature-summary
+    attributes:
+      label: 📝 Resum de la Funcionalitat
+      description: Una descripció breu i clara de la funcionalitat que proposes
+      placeholder: Descriu la funcionalitat en una o dues frases...
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem-statement
+    attributes:
+      label: 🎯 Problema o Necessitat
+      description: Quin problema resol aquesta funcionalitat? Quina necessitat cobreix?
+      placeholder: |
+        Descriu el problema actual o la necessitat que has identificat:
+        - Què és difícil de fer actualment?
+        - Quin procés es podria millorar?
+        - Quina funcionalitat falta?
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposed-solution
+    attributes:
+      label: 💡 Solució Proposada
+      description: Descriu la teva idea per resoldre el problema
+      placeholder: |
+        Explica la teva solució proposada:
+        - Com funcionaria la nova funcionalitat?
+        - Quins elements d'interfície caldrien?
+        - Com interactuaria amb funcionalitats existents?
+    validations:
+      required: true
+
+  - type: dropdown
+    id: user-type
+    attributes:
+      label: 👥 Usuaris Beneficiats
+      description: Quins tipus d'usuari es beneficiarien d'aquesta funcionalitat?
+      multiple: true
+      options:
+        - SUPER_ADMIN - Administradors globals
+        - ADMIN - Administradors de centre
+        - COORDINADOR - Coordinadors educatius
+        - MONITOR - Monitors/Educadors
+        - FAMILIA - Famílies dels estudiants
+        - Tots els usuaris
+    validations:
+      required: true
+
+  - type: dropdown
+    id: module
+    attributes:
+      label: 📋 Mòdul Afectat
+      description: En quin mòdul s'implementaria aquesta funcionalitat?
+      options:
+        - Autenticació/Seguretat
+        - Gestió d'Usuaris
+        - Gestió d'Estudiants
+        - Contractes i Serveis
+        - Assistència i Control
+        - Facturació i Pagaments
+        - Chat i Comunicació
+        - Dashboard i Analytics
+        - Reports i Informes
+        - Configuració Sistema
+        - API i Integracions
+        - Frontend/UX
+        - Nou mòdul
+        - Millora general
+    validations:
+      required: true
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: 📊 Prioritat Suggerida
+      description: Quina prioritat creus que hauria de tenir aquesta funcionalitat?
+      options:
+        - 🔴 Alta - Crítica per operació diària
+        - 🟠 Mitjana-Alta - Molt útil, millora significativa
+        - 🟡 Mitjana - Útil, millora l'experiència
+        - 🟢 Baixa - Nice to have, no urgent
+    validations:
+      required: true
+
+  - type: textarea
+    id: use-cases
+    attributes:
+      label: 🎬 Casos d'Ús
+      description: Descriu escenaris específics on s'utilitzaria aquesta funcionalitat
+      placeholder: |
+        Exemples de casos d'ús:
+        
+        **Cas d'ús 1:**
+        - Com a [tipus d'usuari]
+        - Vull [acció]
+        - Per tal de [objectiu]
+        
+        **Cas d'ús 2:**
+        - Com a [tipus d'usuari]
+        - Necessito [funcionalitat]
+        - Perquè [justificació]
+    validations:
+      required: true
+
+  - type: textarea
+    id: technical-considerations
+    attributes:
+      label: 🔧 Consideracions Tècniques
+      description: Hi ha alguna consideració tècnica específica?
+      placeholder: |
+        Si tens coneixements tècnics, menciona:
+        - Integracions necessàries
+        - Impacte en base de dades
+        - Consideracions de rendiment
+        - Dependències externes
+        - Compatibilitat amb funcionalitats existents
+
+  - type: textarea
+    id: acceptance-criteria
+    attributes:
+      label: ✅ Criteris d'Acceptació
+      description: Quan consideraries que la funcionalitat està completa?
+      placeholder: |
+        Llista criteris específics:
+        - [ ] L'usuari pot...
+        - [ ] El sistema permet...
+        - [ ] Es mostra correctament...
+        - [ ] Funciona en diferents dispositius...
+        - [ ] Les dades es guarden/carreguen correctament...
+
+  - type: textarea
+    id: mockups
+    attributes:
+      label: 🎨 Mockups o Screenshots
+      description: Si tens idees visuals, comparteix-les aquí
+      placeholder: |
+        Arrossega i deixa anar imatges aquí o descriu:
+        - Com es veuria la nova funcionalitat
+        - On s'ubicaria en la interfície actual
+        - Quins elements nous caldrien
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: 🔄 Alternatives Considerades
+      description: Has pensat en altres maneres de resoldre aquest problema?
+      placeholder: |
+        Menciona altres solucions que has considerat:
+        - Solució alternativa A: ...
+        - Solució alternativa B: ...
+        - Per què la solució proposada és millor?
+
+  - type: dropdown
+    id: implementation-complexity
+    attributes:
+      label: ⚖️ Complexitat d'Implementació (estimada)
+      description: Quin nivell de complexitat creus que tindria implementar-ho?
+      options:
+        - 🟢 Baixa - Canvis menors, poques hores
+        - 🟡 Mitjana - Desenvolupament moderat, alguns dies
+        - 🟠 Alta - Desenvolupament complex, setmanes
+        - 🔴 Molt Alta - Canvis majors, mesos
+        - ❓ No ho sé
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: 📝 Context Addicional
+      description: Qualsevol altra informació rellevant
+      placeholder: |
+        - Exemples d'altres aplicacions que ho fan bé
+        - Referències o enllaços útils
+        - Feedback d'usuaris reals
+        - Dades que recolzin la necessitat
+
+  - type: checkboxes
+    id: contribution
+    attributes:
+      label: 🤝 Contribució
+      description: Estaries disposat/a a contribuir en la implementació?
+      options:
+        - label: Estic interessat/ada en ajudar amb el disseny
+        - label: Podria ajudar amb la implementació frontend
+        - label: Podria ajudar amb la implementació backend
+        - label: Podria ajudar amb testing
+        - label: Podria ajudar amb documentació
+        - label: Només suggereixo la idea

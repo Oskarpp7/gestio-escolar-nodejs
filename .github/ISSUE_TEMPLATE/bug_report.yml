@@ -1,0 +1,171 @@
+name: 🐛 Bug Report
+description: Reporta un error o problema en l'aplicació
+title: "[BUG] "
+labels: ["bug", "triage"]
+assignees: []
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## 🐛 Gràcies per reportar un bug!
+        
+        Si us plau, proporciona tanta informació com sigui possible per ajudar-nos a resoldre el problema ràpidament.
+
+  - type: checkboxes
+    id: prerequisites
+    attributes:
+      label: ✅ Prerequisits
+      description: Si us plau, confirma que has fet el següent
+      options:
+        - label: He cercat en issues existents per assegurar-me que aquest bug no s'ha reportat abans
+          required: true
+        - label: He llegit la documentació i el README
+          required: true
+        - label: Estic executant la versió més recent del codi
+          required: true
+
+  - type: textarea
+    id: bug-description
+    attributes:
+      label: 📝 Descripció del Bug
+      description: Una descripció clara i concisa del problema
+      placeholder: Descriu què està passant...
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected-behavior
+    attributes:
+      label: ✅ Comportament Esperat
+      description: Què esperaves que passés?
+      placeholder: Descriu el comportament esperat...
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual-behavior
+    attributes:
+      label: ❌ Comportament Actual
+      description: Què està passant en realitat?
+      placeholder: Descriu el comportament actual...
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction-steps
+    attributes:
+      label: 🔄 Passos per Reproduir
+      description: Passos detallats per reproduir el problema
+      placeholder: |
+        1. Vés a '...'
+        2. Clica a '...'
+        3. Desplaça't fins '...'
+        4. Veu l'error
+    validations:
+      required: true
+
+  - type: dropdown
+    id: user-role
+    attributes:
+      label: 👤 Rol d'Usuari
+      description: Quin rol tenies quan va ocórrer el problema?
+      options:
+        - SUPER_ADMIN
+        - ADMIN
+        - COORDINADOR
+        - MONITOR
+        - FAMILIA
+        - Usuari no autenticat
+        - No aplicable
+    validations:
+      required: true
+
+  - type: dropdown
+    id: module
+    attributes:
+      label: 📋 Mòdul Afectat
+      description: En quin mòdul de l'aplicació has trobat el problema?
+      options:
+        - Autenticació/Login
+        - Gestió d'Usuaris
+        - Gestió d'Estudiants
+        - Contractes
+        - Assistència
+        - Facturació
+        - Chat/Comunicació
+        - Dashboard
+        - Reports/Informes
+        - Configuració
+        - API Backend
+        - Frontend/UI
+        - Base de Dades
+        - Altres
+    validations:
+      required: true
+
+  - type: dropdown
+    id: severity
+    attributes:
+      label: 🚨 Severitat
+      description: Quin és l'impacte del problema?
+      options:
+        - 🔴 Crítica - Aplicació inutilitzable
+        - 🟠 Alta - Funcionalitat principal no funciona
+        - 🟡 Mitjana - Funcionalitat secundària afectada
+        - 🟢 Baixa - Problema menor o cosmètic
+    validations:
+      required: true
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: 🖥️ Entorn
+      description: Informació sobre l'entorn on ocorre el problema
+      value: |
+        - **OS**: (ex: macOS 13.0, Windows 11, Ubuntu 22.04)
+        - **Navegador**: (ex: Chrome 118, Firefox 119, Safari 16)
+        - **Versió Node.js**: (ex: 18.17.0)
+        - **Base de Dades**: (ex: PostgreSQL 14.9, SQLite)
+        - **Entorn**: (Development / Staging / Production)
+        - **Codi Escola**: (ex: M5544, E128)
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: 📋 Logs i Missatges d'Error
+      description: Si us plau, inclou logs, stack traces o missatges d'error rellevants
+      render: shell
+      placeholder: |
+        Enganxa aquí els logs o missatges d'error...
+
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: 📸 Screenshots
+      description: Si és un problema visual, si us plau afegeix screenshots
+      placeholder: Arrossega i deixa anar les imatges aquí...
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: 📝 Context Addicional
+      description: Qualsevol altra informació que pugui ser útil
+      placeholder: |
+        - Ha passat abans?
+        - Quan va començar a passar?
+        - Afecta a tots els usuaris o només alguns?
+        - Hi ha alguna solució temporal?
+
+  - type: checkboxes
+    id: data-sensitivity
+    attributes:
+      label: 🔒 Dades Sensibles
+      description: Confirma sobre dades sensibles
+      options:
+        - label: He revisat que no hi ha dades sensibles (passwords, tokens, etc.) en aquest report
+          required: true
+        - label: Si cal compartir dades sensibles, ho faré de forma privada amb els maintainers
+          required: true

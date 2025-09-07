@@ -1,0 +1,186 @@
+name: 📚 Documentation Issue
+description: Reporta problemes amb la documentació o suggereix millores
+title: "[DOCS] "
+labels: ["documentation", "good first issue"]
+assignees: []
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## 📚 Gràcies per ajudar a millorar la documentació!
+        
+        Una bona documentació és essencial per a l'èxit del projecte. El teu feedback és molt valuós.
+
+  - type: dropdown
+    id: doc-type
+    attributes:
+      label: 📝 Tipus de Documentació
+      description: Quin tipus de documentació està afectat?
+      options:
+        - README.md
+        - API Documentation
+        - Installation Guide
+        - User Manual
+        - Developer Guide
+        - Contributing Guidelines
+        - Code Comments
+        - Configuration Files
+        - Error Messages
+        - Help Text/Tooltips
+        - Other
+    validations:
+      required: true
+
+  - type: dropdown
+    id: issue-type
+    attributes:
+      label: 🎯 Tipus de Problema
+      description: Quin tipus de problema has trobat?
+      options:
+        - Information Missing - Falta informació
+        - Information Incorrect - Informació incorrecta
+        - Information Outdated - Informació obsoleta
+        - Unclear/Confusing - No està clar
+        - Typo/Grammar - Error tipogràfic o gramatical
+        - Broken Link - Enllaç trencat
+        - Code Example Wrong - Exemple de codi incorrecte
+        - Translation Issue - Problema de traducció
+        - Formatting Issue - Problema de format
+        - Suggestion for Improvement - Suggeriment de millora
+    validations:
+      required: true
+
+  - type: textarea
+    id: location
+    attributes:
+      label: 📍 Ubicació
+      description: On has trobat el problema? (URL, fitxer, secció)
+      placeholder: |
+        Especifica on està el problema:
+        - URL: https://...
+        - Fitxer: docs/installation.md
+        - Secció: "Configuració Base de Dades"
+        - Línia: 45-50
+    validations:
+      required: true
+
+  - type: textarea
+    id: current-content
+    attributes:
+      label: 📄 Contingut Actual
+      description: Què diu la documentació actualment? (copia el text problemàtic)
+      render: markdown
+      placeholder: Enganxa aquí el text actual que té problemes...
+
+  - type: textarea
+    id: expected-content
+    attributes:
+      label: ✅ Contingut Esperat/Suggerit
+      description: Com hauria de ser el contingut?
+      render: markdown
+      placeholder: |
+        Proposa el contingut corregit o nou:
+        - Si és un error, mostra la versió correcta
+        - Si falta informació, explica què s'hauria d'afegir
+        - Si és confús, proposa una redacció més clara
+
+  - type: textarea
+    id: context
+    attributes:
+      label: 🎯 Context d'Ús
+      description: En quin context has trobat aquest problema?
+      placeholder: |
+        - Què estaves intentant fer?
+        - Quin era el teu objectiu?
+        - Ets un usuari nou o experimentat?
+        - Quin rol tens en el sistema?
+
+  - type: dropdown
+    id: target-audience
+    attributes:
+      label: 👥 Audiència Objectiu
+      description: A qui va dirigida aquesta documentació?
+      multiple: true
+      options:
+        - New Users - Usuaris nous
+        - Administrators - Administradors
+        - Developers - Desenvolupadors
+        - End Users - Usuaris finals
+        - System Integrators - Integradors
+        - Support Team - Equip de suport
+        - All Users - Tots els usuaris
+
+  - type: dropdown
+    id: urgency
+    attributes:
+      label: ⏰ Urgència
+      description: Quin és l'impacte d'aquest problema de documentació?
+      options:
+        - 🔴 High - Bloqueja l'ús del sistema
+        - 🟠 Medium - Causa confusió significativa
+        - 🟡 Low - Millora menor però útil
+        - 🟢 Very Low - Problema cosmètic
+    validations:
+      required: true
+
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: 📸 Screenshots
+      description: Si és útil, afegeix captures de pantalla
+      placeholder: Arrossega i deixa anar imatges aquí per mostrar el problema...
+
+  - type: textarea
+    id: user-impact
+    attributes:
+      label: 👤 Impacte en l'Usuari
+      description: Com afecta aquest problema als usuaris?
+      placeholder: |
+        - Quants usuaris poden estar afectats?
+        - Què passa quan segueixen la documentació actual?
+        - Hi ha solucions temporals que la gent està utilitzant?
+
+  - type: textarea
+    id: related-issues
+    attributes:
+      label: 🔗 Issues Relacionats
+      description: Hi ha altres issues o PRs relacionats amb aquest problema?
+      placeholder: |
+        - Issue #123
+        - PR #456
+        - Relacionat amb la funcionalitat X
+
+  - type: checkboxes
+    id: contribution-offer
+    attributes:
+      label: 🤝 Oferta de Contribució
+      description: Estaries disposat/ada a ajudar a corregir aquesta documentació?
+      options:
+        - label: Puc crear un Pull Request amb la correció
+        - label: Puc revisar i donar feedback sobre la nova documentació
+        - label: Puc ajudar a traduir el contingut
+        - label: Només reporto el problema
+
+  - type: textarea
+    id: additional-suggestions
+    attributes:
+      label: 💡 Suggeriments Addicionals
+      description: Tens altres idees per millorar la documentació?
+      placeholder: |
+        - Altres seccions que podrien millorar-se
+        - Recursos addicionals que serien útils
+        - Exemples que s'haurien d'afegir
+        - Formats alternatius (videos, diagrames, etc.)
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: ✅ Checklist
+      options:
+        - label: He cercat en issues existents per assegurar-me que aquest problema no s'ha reportat abans
+          required: true
+        - label: He proporcionat suficient informació per entendre i reproduir el problema
+          required: true
+        - label: He suggerit una solució constructiva quan ha estat possible
+          required: true
