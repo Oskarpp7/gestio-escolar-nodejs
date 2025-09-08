@@ -10,7 +10,7 @@ const { createServer } = require('http');
 const { Server } = require('socket.io');
 
 const config = require('./src/config/config');
-const logger = require('./src/utils/logger');
+const { logger } = require('./src/utils/logger');
 const { sequelize } = require('./src/config/database');
 const socketHandler = require('./src/socket/socketHandler');
 
@@ -28,7 +28,7 @@ const pricingRoutes = require('./src/routes/pricing');
 // Middleware personalitzat
 const tenantMiddleware = require('./src/middleware/tenant');
 const authMiddleware = require('./src/middleware/auth');
-const errorHandler = require('./src/middleware/errorHandler');
+const { errorHandler } = require('./src/middleware/errorHandler');
 
 const app = express();
 const server = createServer(app);
@@ -54,9 +54,10 @@ const limiter = rateLimit({
 });
 
 // Session store amb Sequelize
-const sessionStore = new SequelizeStore({
-  db: sequelize,
-});
+// En tests usamos MemoryStore para simplificar; en otros entornos SequelizeStore
+const sessionStore = process.env.NODE_ENV === 'test'
+  ? new session.MemoryStore()
+  : new SequelizeStore({ db: sequelize });
 
 // Middleware de seguretat
 app.use(helmet({
@@ -175,8 +176,10 @@ async function startServer() {
       logger.info('✅ Models de base de dades sincronitzats');
     }
     
-    // Sincronitzar session store
-    await sessionStore.sync();
+    // Sincronitzar session store quan apliqui
+    if (typeof sessionStore.sync === 'function') {
+      await sessionStore.sync();
+    }
     
     const PORT = process.env.PORT || 3000;
     server.listen(PORT, () => {

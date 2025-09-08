@@ -2167,9 +2167,77 @@ Gracias por el feedback. Todo quedó subido en main (8092016) y el build del cli
 
 ---
 
-_**User (2025-09-08 09:02Z)**_
+_**User (2025-09-08 09:13Z)**_
 
 ok
+
+---
+
+_**Assistant**_
+
+Voy a buscar rápidamente si existe un endpoint de tenants en el backend y, según lo que encuentre, crearé el cliente y wiring en el store; luego añadiré filtros al listado de pricing y, si falta soporte en el backend, lo extenderé. Para conectar el selector de centros a datos reales y añadir filtros en /api/pricing, revisaré el wiring de rutas en el backend para saber cómo montar un listado de tenants y extenderé la ruta de pricing si hace falta. Luego aplicaré los cambios en backend y frontend. Para añadir el listado real de centros y filtros en pricing, primero leeré por completo `tenant.js` para ajustar ahí un endpoint protegido para listar tenants. Luego implementaré el store y filtros en el frontend y, si es necesario, ampliaré el backend de pricing con filtros. Voy a revisar el archivo de rutas de pricing para confirmar y extender los filtros (service_type, contract_type, is_active) en el endpoint GET paginado. Luego añadiré el endpoint de listado de tenants y conectaré el store del cliente. Voy a añadir un endpoint protegido para listar tenants y ampliar el endpoint GET de pricing con filtros; luego conectaré el store y la UI de filtros en el frontend, compilaré el cliente y haré commit + push. 
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+Voy a verificar la estructura del proyecto y dependencias para decidir un runner de tests adecuado y luego añadir tests mínimos para pricing y tenants. Voy a revisar los modelos de Tenant y User para saber qué campos requeridos hay y poder crear datos de prueba y así escribir tests con jest/supertest. 
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+[object Object]
+
+---
+
+_**User (2025-09-08 09:14Z)**_
+
+@agent Continuar: "¿Desea continuar con la iteración?"
 
 ---
 

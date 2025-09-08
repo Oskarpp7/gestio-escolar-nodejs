@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 const { User, Tenant } = require('../models');
-const logger = require('../utils/logger');
+const { logger, logActions } = require('../utils/logger');
 
 /**
  * Gestió de connexions Socket.io per chat temps real i notificacions
@@ -92,7 +92,7 @@ function socketHandler(io) {
         socket.join(`chat_room_${roomId}`);
         socket.emit('joined_chat_room', { roomId });
         
-        logger.logActions.chatMessage(roomId, userId, 'USER_JOINED', tenantId);
+  logActions.chatMessage(roomId, userId, 'USER_JOINED', tenantId);
         
       } catch (error) {
         logger.error('Error joining chat room:', error);
@@ -132,7 +132,7 @@ function socketHandler(io) {
           timestamp: new Date().toISOString()
         });
         
-        logger.logActions.chatMessage(roomId, userId, messageType || 'text', tenantId);
+  logActions.chatMessage(roomId, userId, messageType || 'text', tenantId);
         
       } catch (error) {
         logger.error('Error sending chat message:', error);
@@ -210,7 +210,7 @@ function socketHandler(io) {
           timestamp: new Date().toISOString()
         });
         
-        logger.logActions.userAction(
+  logActions.userAction(
           userId,
           'ATTENDANCE_UPDATED',
           { studentId, status, date },
