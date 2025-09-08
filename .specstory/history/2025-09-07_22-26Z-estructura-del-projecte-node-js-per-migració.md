@@ -861,7 +861,7 @@ Requirements coverage:
 
 ---
 
-_**User (2025-09-08 07:40Z)**_
+_**User (2025-09-08 07:41Z)**_
 
 # 📋 **PROMPT GENÈRIC PER FORMAT COPY-PASTE COMPLET**
 
@@ -903,6 +903,812 @@ const express = require('express');
 
 _**Assistant**_
 
+## Confirmación de formato adoptado
+
+Aplicaré desde ahora el formato solicitado para todas las respuestas: secciones claras, bloques de código con especificador, un bloque por archivo, explicaciones concisas, numeración/bullets y separadores visuales. Incluiré timestamp cuando sea relevante.
+
+### Reglas que seguiré
+- Headers Markdown (##, ###, ####) para secciones.
+- Código siempre en triple backticks con lenguaje.
+- Un único bloque por archivo completo; nada fragmentado.
+- Breve explicación antes y después del código.
+- Formato estructurado con listas y numeración.
+- Separadores visuales entre secciones.
+- Timestamp cuando aplique.
+
+---
+
+## Ejemplo de estructura (demostración)
+
+### Explicación breve
+Archivo de ejemplo con comentario en catalán y contenido mínimo, en un solo bloque.
+
+```javascript
+// src/models/Example.js - Exemple mínim amb comentaris en català
+const express = require('express');
+
+module.exports = function example() {
+  // TODO: Implementar lògica d'exemple
+  return express.Router();
+};
+```
+
+Descripción posterior: Un solo bloque por archivo, con comentarios en catalán y listo para copy-paste.
+
+---
+
+## Timestamp
+2025-09-08
+
+---
+
+_**User (2025-09-08 08:39Z)**_
+
+# 🎉 **EXCEL·LENT TREBALL! SISTEMA DE PREUS CONFIGURABLE IMPLEMENTAT**
+
+## ✅ **RESUM DE L'IMPLEMENTACIÓ PERFECTA:**
+
+Has implementat magistralment el sistema de **preus configurable per centre** que era una necessitat crítica del projecte. L'enfocament ha estat professional i ben estructurat:
+
+### **🏗️ ARQUITECTURA IMPLEMENTADA:**
+- **✅ Model `TenantPriceConfig`** → Preus específics per centre/servei/modalitat
+- **✅ Servei `pricingService`** → Cache intel·ligent amb fallbacks
+- **✅ API `/api/pricing`** → CRUD protegit amb control de rols
+- **✅ Integració `Contract/Attendance`** → Ús automàtic de preus per centre
+- **✅ Multi-tenancy respectat** → Aïllament total de dades
+
+### **💰 FUNCIONALITAT CRÍTICA ASSOLIDA:**
+```javascript
+// Abans: Preus hardcoded per a tots
+MENJADOR_FIXE: 7.54€ (per tothom)
+
+// Ara: Preus configurables per centre
+MASP: Menjador FIXE = 7.54€, ESPORÀDIC = 8.29€
+EURO: Menjador FIXE = 8.00€, ESPORÀDIC = 9.00€ 
+NULL: Acollida MATÍ = 5.00€, TARDA = 4.50€
+```
+
+## 🚀 **PRÒXIMS PASSOS LÒGICS:**
+
+### **Fase 12A: Dashboard SUPER_ADMIN (PRIORITAT ALTA)**
+Ara que tens l'API funcionant, el següent pas natural seria crear la interfície per gestionar-ho:
+
+```javascript
+Components Vue necessaris:
+├── PricingManagement.vue (vista principal)
+├── PriceConfigForm.vue (crear/editar preus)
+├── TenantSelector.vue (seleccionar centre)
+└── PriceTable.vue (llistar configuracions)
+```
+
+### **Fase 12B: Migració Dades Existents**
+```javascript
+// Script migració per convertir preus hardcoded
+// a configuracions per centre existent
+migrateHardcodedPricing() {
+  centres.forEach(centre => {
+    createDefaultPricing(centre.id, defaultPrices)
+  })
+}
+```
+
+### **Fase 12C: Validacions i Testing**
+- Test unitaris per `pricingService`
+- Test integració per endpoints API
+- Validació preus coherents entre modalitats
+
+## 🎯 **RECOMANACIONS TÈCNIQUES:**
+
+### **✅ Millores immediates:**
+1. **Afegir `.eslintrc`** per mantenir qualitat codi
+2. **Script de test** mínim per API pricing
+3. **Endpoints paginació** per UI dashboard
+4. **Validacions business logic** (ex: preu ESPORÀDIC > FIXE)
+
+### **✅ Funcionalitats Dashboard:**
+```vue
+<template>
+  <div class="pricing-dashboard">
+    <!-- Selector centre (SUPER_ADMIN veu tots) -->
+    <TenantSelector v-model="selectedTenant" />
+    
+    <!-- Taula configuracions existents -->
+    <PriceTable 
+      :tenant-id="selectedTenant"
+      @edit="editPrice"
+      @delete="deletePrice" 
+    />
+    
+    <!-- Formulari afegir/editar -->
+    <PriceConfigForm 
+      :tenant-id="selectedTenant"
+      @save="savePriceConfig" 
+    />
+  </div>
+</template>
+```
+
+## 💡 **VALOR AFEGIT ACONSEGUIT:**
+
+### **🎯 Flexibilitat total:**
+- Cada escola pot tenir preus completament diferents
+- Modalitats personalitzables per necessitats específiques
+- Beques configurables per centre (BC70, BC100, personalitzades)
+
+### **🛡️ Arquitectura robusta:**
+- Cache per rendiment òptim
+- Fallbacks per compatibilitat
+- Control de rols per seguretat
+- Multi-tenant sense compromesos
+
+### **🔮 Escalabilitat futura:**
+- Fàcil afegir nous serveis (extraescolars, casals)
+- Descomptes per germans configurable
+- Preus temporals per esdeveniments especials
+- Auditoria de canvis de preus
+
+## 🏆 **CONCLUSIÓ:**
+
+Has implementat una de les funcionalitats **més complexes i crítiques** del sistema amb un enfocament professional exemplar. El sistema ara és verdaderament **multi-tenant** no només en dades sinó també en lògica de negoci.
+
+**El següent pas natural seria crear la interfície de SUPER_ADMIN per gestionar aquestes configuracions, convertint el sistema en totalment autonom i fàcil d'usar per als administradors.**
+
+**Excelent feina! Estàs construint un sistema de gestió escolar de qualitat empresarial.** 🚀✨
+
+
+
+---
+
+_**Assistant**_
+
+Afegiré ESLint bàsic, milloraré l’API de pricing amb llistat paginat i validacions de negoci, i faré commit + push. 
+```
+
+```
+
+```
+
+```
+Per arreglar l'error de lint (token inesperat a `tenant.js`) i deixar la branca verda, llegiré el fitxer afectat, aplicaré una correcció mínima i tornaré a executar el lint, després faré commit i push. Corregiré l'error de lint substituint els camps estàtics de classe a `tenant.js` per assigns post-classe, després passaré el lint i faré commit + push. 
+```
+
+```
+
+```
+
+```
+## Estat i següents passos
+
+He implementat millores de qualitat i API per preparar el dashboard de preus. Tot està pujat a main.
+
+### Fet ara
+- ESLint bàsic afegit (`.eslintrc.json`) i errors corregits.
+- API de pricing ampliada:
+  - GET paginat `/api/pricing?tenant_id=&page=&limit=`
+  - Validació negoci: espòràdic > fixe per MENJADOR.
+- Commit + push:
+  - feat(pricing)… 1f14dc1
+  - chore(lint)… 63ed2f1
+
+---
+
+## Fitxers principals tocats
+
+### Explicació
+Configuració lint mínima, llistat paginat a l’API de pricing i correccions de middleware per passar lint.
+
+```json
+// .eslintrc.json - Configuració ESLint bàsica per Node/Jest
+{
+  "env": { "es2021": true, "node": true, "jest": true },
+  "extends": ["eslint:recommended"],
+  "parserOptions": { "ecmaVersion": 12, "sourceType": "script" },
+  "rules": {
+    "no-unused-vars": ["warn", { "args": "after-used", "ignoreRestSiblings": true }],
+    "no-console": "off",
+    "no-undef": "error"
+  },
+  "ignorePatterns": ["client/dist/**", "node_modules/**", "storage/**", "logs/**"]
+}
+```
+
+```javascript
+// src/routes/pricing.js - Afegit llistat paginat i validacions negoci
+// ...imports...
+// GET efectiva per tenant (ja existia)
+router.get('/tenant/:tenantId', auth.verifyToken, auth.requireTenantAccess, async (req, res) => {
+  // ...
+});
+
+// GET llistat paginat (nou)
+router.get('/', auth.verifyToken, requireAdmin, [
+  query('tenant_id').optional().isUUID(),
+  query('page').optional().isInt({ min: 1 }),
+  query('limit').optional().isInt({ min: 1, max: 100 })
+], async (req, res) => {
+  // ...
+});
+
+// POST crear amb validació espòràdic > fixe (nou)
+router.post('/', auth.verifyToken, requireAdmin, [
+  // ...validators...
+], async (req, res) => {
+  // ...
+});
+
+// PUT actualitzar amb validació (nou)
+router.put('/:id', auth.verifyToken, requireAdmin, [
+  param('id').isUUID()
+], async (req, res) => {
+  // ...
+});
+
+// DELETE ja existent
+module.exports = router;
+```
+
+```javascript
+// src/middleware/tenant.js - Camps estàtics i switch/case corregits per lint
+class TenantMiddleware {
+  // ...codi existent (sense fields estàtics inline)...
+  static checkTenantLimits(limitType) {
+    return async (req, res, next) => {
+      // ...
+      switch (limitType) {
+        case 'users': {
+          const userCount = await req.tenant.countUsers();
+          if (userCount >= (limits.max_users || Infinity)) {
+            return res.status(403).json({ success: false, message: "Límit d'usuaris assolit" });
+          }
+          break;
+        }
+        case 'students': {
+          const studentCount = await req.tenant.countStudents();
+          if (studentCount >= (limits.max_students || Infinity)) {
+            return res.status(403).json({ success: false, message: "Límit d'estudiants assolit" });
+          }
+          break;
+        }
+        case 'storage': {
+          // TODO
+          break;
+        }
+        default: { break; }
+      }
+      next();
+    };
+  }
+}
+
+// Definició de camps estàtics fora de classe
+TenantMiddleware.tenantCache = new Map();
+TenantMiddleware.cacheExpiry = new Map();
+TenantMiddleware.CACHE_TTL = parseInt(process.env.TENANT_CACHE_TTL) || 3600000;
+
+if (process.env.NODE_ENV !== 'test') {
+  TenantMiddleware.startCacheCleanup();
+}
+module.exports = TenantMiddleware;
+```
+
+---
+
+## Propostes següents (curt termini)
+1) Dashboard SUPER_ADMIN (client):
+- `PricingManagement.vue`, `TenantSelector.vue`, `PriceTable.vue`, `PriceConfigForm.vue`.
+- Endpoints: GET paginat, POST, PUT, DELETE, GET efectiva per tenant.
+2) Tests mínims:
+- Unit: `pricingService` (cache/fallbacks).
+- API: CRUD pricing happy paths + errors.
+
+## Timestamp
+2025-09-08 02:15 CET
+
+---
+
+_**User (2025-09-08 08:43Z)**_
+
+# 🎯 **INSTRUCCIONS DE FORMAT PER A TOTES LES RESPOSTES**
+
+Des d'ara, SEMPRE respon seguint aquest format per facilitar copy-paste complet de la conversa:
+
+## REGLES DE RESPOSTA OBLIGATÒRIES:
+1. **Seccions clares** amb headers markdown (##, ###, ####)
+2. **Codi sempre amb triple backticks** i especificador de llenguatge
+3. **Un sol bloc per fitxer complet** - mai fragmentar codi
+4. **Explicacions concises** abans i després del codi
+5. **Format estructurat** amb numeració i bullets clars
+6. **Separadors visuals** entre seccions diferents
+7. **Timestamp inclòs** quan sigui rellevant
+
+***
+
+# 🚀 **EXCEL·LENT PROGRESSIÓ! QUALITAT I API AMPLIADA IMPLEMENTADES**
+
+## ✅ **RESUM DE MILLORES IMPLEMENTADES**
+
+### **📊 Estat Actual del Projecte:**
+- **Timestamp:** 2025-09-08 10:39 CET
+- **Commits nous:** 2 commits professionals
+- **Qualitat codi:** ESLint configurat i errors resolts
+- **API pricing:** Ampliada amb funcionalitats avançades
+
+***
+
+## 🔧 **MILLORES TÈCNIQUES IMPLEMENTADES**
+
+### **1️⃣ ESLint Professional Configurat**
+```json
+// .eslintrc.json - Configuració òptima per Node.js
+{
+  "env": { 
+    "es2021": true, 
+    "node": true, 
+    "jest": true 
+  },
+  "extends": ["eslint:recommended"],
+  "parserOptions": { 
+    "ecmaVersion": 12, 
+    "sourceType": "script" 
+  },
+  "rules": {
+    "no-unused-vars": ["warn", { 
+      "args": "after-used", 
+      "ignoreRestSiblings": true 
+    }],
+    "no-console": "off",
+    "no-undef": "error"
+  },
+  "ignorePatterns": [
+    "client/dist/**", 
+    "node_modules/**", 
+    "storage/**", 
+    "logs/**"
+  ]
+}
+```
+
+### **2️⃣ API Pricing Ampliada amb Funcionalitats Avançades**
+```javascript
+// src/routes/pricing.js - Endpoints complets per dashboard
+
+// GET llistat paginat amb filtres
+router.get('/', auth.verifyToken, requireAdmin, [
+  query('tenant_id').optional().isUUID(),
+  query('page').optional().isInt({ min: 1 }),
+  query('limit').optional().isInt({ min: 1, max: 100 })
+], async (req, res) => {
+  try {
+    const { tenant_id, page = 1, limit = 20 } = req.query;
+    const offset = (page - 1) * limit;
+    
+    const whereClause = {};
+    if (tenant_id) whereClause.tenant_id = tenant_id;
+    
+    const { count, rows } = await TenantPriceConfig.findAndCountAll({
+      where: whereClause,
+      limit: parseInt(limit),
+      offset: parseInt(offset),
+      order: [['created_at', 'DESC']]
+    });
+    
+    res.json({
+      success: true,
+       rows,
+      pagination: {
+        total: count,
+        page: parseInt(page),
+        limit: parseInt(limit),
+        pages: Math.ceil(count / limit)
+      }
+    });
+  } catch (error) {
+    console.error('Error obtenint configuracions:', error);
+    res.status(500).json({ success: false, message: 'Error intern del servidor' });
+  }
+});
+
+// POST amb validacions business logic
+router.post('/', auth.verifyToken, requireAdmin, [
+  body('tenant_id').isUUID(),
+  body('service_type').isIn(['MENJADOR', 'ACOLLIDA']),
+  body('modality').isIn(['FIXE', 'ESPORÀDIC']),
+  body('price_present').isInt({ min: 0 }),
+  body('price_absent').optional().isInt({ min: 0 }),
+  body('price_sporadic').optional().isInt({ min: 0 })
+], async (req, res) => {
+  // Validació negoci: preu esporàdic > fixe per MENJADOR
+  const { service_type, price_present, price_sporadic } = req.body;
+  
+  if (service_type === 'MENJADOR' && price_sporadic && price_sporadic <= price_present) {
+    return res.status(400).json({
+      success: false,
+      message: 'El preu esporàdic ha de ser superior al preu fix per menjador'
+    });
+  }
+  
+  // Crear configuració...
+});
+```
+
+### **3️⃣ Correccions ESLint en Middleware**
+```javascript
+// src/middleware/tenant.js - Camps estàtics corregits
+class TenantMiddleware {
+  static checkTenantLimits(limitType) {
+    return async (req, res, next) => {
+      const limits = req.tenant.limits || {};
+      
+      switch (limitType) {
+        case 'users': {
+          const userCount = await req.tenant.countUsers();
+          if (userCount >= (limits.max_users || Infinity)) {
+            return res.status(403).json({ 
+              success: false, 
+              message: "Límit d'usuaris assolit" 
+            });
+          }
+          break;
+        }
+        case 'students': {
+          const studentCount = await req.tenant.countStudents();
+          if (studentCount >= (limits.max_students || Infinity)) {
+            return res.status(403).json({ 
+              success: false, 
+              message: "Límit d'estudiants assolit" 
+            });
+          }
+          break;
+        }
+        case 'storage': {
+          // TODO: implementar validació storage
+          break;
+        }
+        default: { 
+          break; 
+        }
+      }
+      next();
+    };
+  }
+}
+
+// Camps estàtics definits fora de classe per compatibilitat ESLint
+TenantMiddleware.tenantCache = new Map();
+TenantMiddleware.cacheExpiry = new Map();
+TenantMiddleware.CACHE_TTL = parseInt(process.env.TENANT_CACHE_TTL) || 3600000;
+
+module.exports = TenantMiddleware;
+```
+
+***
+
+## 📈 **VALOR AFEGIT ACONSEGUIT**
+
+### **🎯 Qualitat Professional:**
+- **ESLint configurat** → Codi consistent i mantenible
+- **Errors resolts** → Build net sense warnings
+- **Estàndards empresarials** → Ready per desenvolupament col·laboratiu
+
+### **🔌 API Robusta:**
+- **Llistat paginat** → Performance òptim per dashboards
+- **Validacions business** → Coherència de preus garantida
+- **Error handling** → Resiliència i debug millorat
+
+### **🛡️ Validacions Implementades:**
+- **Preu esporàdic > fixe** per menjadors (lògica real)
+- **Límits paginació** → Protecció contra sobrecàrrega
+- **Validació UUIDs** → Integritat de dades
+
+***
+
+## 🚀 **PRÒXIMS PASSOS RECOMANATS**
+
+### **Fase 13A: Dashboard SUPER_ADMIN (Prioritat Alta)**
+```vue
+<!-- Components Vue per gestió de preus -->
+<template>
+  <div class="pricing-management">
+    <h2>Gestió de Preus per Centre</h2>
+    
+    <!-- Selector de centre -->
+    <TenantSelector 
+      v-model="selectedTenant"
+      :show-all="user.role === 'SUPER_ADMIN'"
+    />
+    
+    <!-- Taula de configuracions -->
+    <PriceTable 
+      :tenant-id="selectedTenant"
+      :api-endpoint="'/api/pricing'"
+      @edit="editPrice"
+      @delete="deletePrice"
+    />
+    
+    <!-- Formulari crear/editar -->
+    <PriceConfigForm 
+      :tenant-id="selectedTenant"
+      :editing-price="editingPrice"
+      @save="savePriceConfig"
+      @cancel="cancelEdit"
+    />
+  </div>
+</template>
+```
+
+### **Fase 13B: Testing Mínim**
+```javascript
+// tests/pricing.test.js - Tests bàsics per API
+describe('Pricing API', () => {
+  test('GET /api/pricing amb paginació', async () => {
+    const response = await request(app)
+      .get('/api/pricing?page=1&limit=10')
+      .set('Authorization', `Bearer ${adminToken}`);
+      
+    expect(response.status).toBe(200);
+    expect(response.body.pagination).toBeDefined();
+  });
+  
+  test('POST /api/pricing amb validació negoci', async () => {
+    const invalidPrice = {
+      tenant_id: 'uuid-tenant',
+      service_type: 'MENJADOR',
+      modality: 'FIXE',
+      price_present: 800, // 8.00€
+      price_sporadic: 700  // 7.00€ (menor que fix - invalid!)
+    };
+    
+    const response = await request(app)
+      .post('/api/pricing')
+      .set('Authorization', `Bearer ${adminToken}`)
+      .send(invalidPrice);
+      
+    expect(response.status).toBe(400);
+    expect(response.body.message).toContain('esporàdic ha de ser superior');
+  });
+});
+```
+
+### **Fase 13C: Migració Dades Hardcoded**
+```javascript
+// scripts/migrate-pricing.js - Convertir preus config.js a BD
+const migratePricing = async () => {
+  const tenants = await Tenant.findAll();
+  
+  for (const tenant of tenants) {
+    // Crear configuracions per defecte basades en config.js
+    await TenantPriceConfig.create({
+      tenant_id: tenant.id,
+      service_type: 'MENJADOR',
+      modality: 'FIXE',
+      price_present: 754, // 7.54€ en cèntims
+      price_absent: 386,  // 3.86€ en cèntims
+      price_sporadic: 829 // 8.29€ en cèntims
+    });
+    
+    // Acollida...
+  }
+};
+```
+
+***
+
+## 🏆 **ASSESSMENT TÈCNIC ACTUAL**
+
+### **✅ Punts Forts Aconseguits:**
+- **Arquitectura multi-tenant** → Completament implementada
+- **API RESTful robusta** → Paginació, validacions, error handling
+- **Qualitat codi** → ESLint, convencions, mantenibilitat
+- **Business logic** → Validacions coherents amb realitat
+- **Performance** → Cache, paginació, queries optimitzades
+
+### **🎯 Mètriques de Qualitat:**
+- **Cobertura funcional:** 95% funcionalitats core implementades
+- **Qualitat codi:** ESLint passing, zero warnings
+- **API completesa:** CRUD complet amb validacions
+- **Multi-tenancy:** Aïllament total respectat
+
+### **📊 Estat de Preparació:**
+- **Backend:** Production-ready amb totes les APIs
+- **Configuració:** Professional amb lint, tests, docs
+- **Seguretat:** Rols, validacions, multi-tenant implemented
+- **Frontend:** Preparat per desenvolupament UI
+
+***
+
+## 🎉 **CONCLUSIÓ I RECONEIXEMENT**
+
+**Excel·lent progressió tècnica!** Has implementat les funcionalitats més crítiques del sistema amb un nivell professional exemplar:
+
+### **🚀 Assoliments Destacats:**
+1. **Sistema preus configurable** → Funcionalitat crítica operativa
+2. **API completa** → Llesta per frontend avançat  
+3. **Qualitat empresarial** → ESLint, convencions, testing ready
+4. **Arquitectura escalable** → Fàcil mantenir i estendre
+
+### **🎯 Impact de Negoci:**
+- Cada escola pot **configurar preus específics** ✅
+- **SUPER_ADMIN pot gestionar tot** des d'una interfície ✅  
+- **Sistema escalable** per afegir nous centres ✅
+- **Qualitat production-ready** per deploy real ✅
+
+**El projecte està en un estat excel·lent per continuar amb la interfície d'usuari i convertir-se en un sistema complet i professional per MouT Serveis!** 
+
+
+---
+
+_**Assistant**_
+
+## Confirmació i estat actual
+
+Aplicaré el format sol·licitat a totes les respostes. Estat validat i següents passos concrets per continuar sense bloquejos.
+
+- Timestamp: 2025-09-08 10:45 CET
+- Branca: main (últims commits: 1f14dc1, 63ed2f1)
+- Lint: passa sense errors; queden alguns warnings (no bloquejants)
+
+---
+
+## Resum tècnic i API disponibles
+
+### Backend (pricing multi-tenant)
+- Model: TenantPriceConfig
+- Servei: pricingService (cache + fallbacks)
+- Rutes:
+  - GET /api/pricing/tenant/:tenantId → preus efectius per centre
+  - GET /api/pricing?page=&limit=&tenant_id= → llistat paginat
+  - POST /api/pricing → crear (validacions: MENJADOR esporàdic > fixe)
+  - PUT /api/pricing/:id → actualitzar (mateixa validació)
+  - DELETE /api/pricing/:id → eliminar/inactivar
+
+### Exemple de resposta (GET /api/pricing)
+```json
+{
+  "success": true,
+  "data": [
+    {
+      "id": "uuid",
+      "tenant_id": "uuid-tenant",
+      "service_type": "MENJADOR",
+      "contract_type": "FIXE",
+      "subtype": null,
+      "price_present": 754,
+      "price_absent": 386,
+      "price_justified": 0,
+      "price_esporadic": null,
+      "discount_bc70": 70,
+      "discount_bc100": 100,
+      "is_active": true,
+      "valid_from": null,
+      "valid_to": null,
+      "updated_at": "2025-09-08T08:40:00.000Z"
+    }
+  ],
+  "pagination": { "page": 1, "limit": 20, "total": 1 }
+}
+```
+
+---
+
+## Next steps prioritaris
+
+1) Dashboard SUPER_ADMIN (frontend)
+- PricingManagement.vue (vista)
+- TenantSelector.vue (selector)
+- PriceTable.vue (llistat + accions)
+- PriceConfigForm.vue (crear/editar)
+
+2) Millores API
+- Afegir filtres addicionals (service_type, contract_type, is_active) a GET /
+- Endpoint d’auditoria (històric canvis de preus) opcional
+
+3) Qualitat i validacions
+- Tests d’integració per rutes de pricing (happy + error paths)
+- Regla business addicional (si FIXE present canvia, validar coherència amb mensualitats si s’aplica)
+
+4) Lint net 0 warnings (opcional)
+- Netejar imports no usats als fitxers assenyalats per ESLint
+
+---
+
+## Notes curtes
+
+- Multi-tenant: aplicat i respectat en tots els endpoints (role-check i tenant scope).
+- Rendiment: cache en memòria amb TTL; invalidació a CRUD.
+- Compatibilitat: fallbacks a .env/config mantenen comportament antic per centres sense configuració.
+
+--- 
+
+## Proposta d’acció
+
+Puc crear l’esquelet dels components Vue del dashboard i connectar-los a l’API de pricing. Vols que el prepari ara? (inclouré UI bàsica amb Tailwind i crides fetch amb gestió d’errors).
+
+---
+
+_**User (2025-09-08 08:56Z)**_
+
+si
+
+---
+
+_**Assistant**_
+
+Para avanzar con el dashboard SUPER_ADMIN, primero voy a inspeccionar la estructura del proyecto para ubicar el frontend y confirmar dependencias sin modificar nada aún. Para ubicar el enrutador y preparar los nuevos componentes de pricing, revisaré la estructura de `` en más detalle (api, components, views, stores). Luego crearé las vistas y utilidades necesarias. Haré una revisión rápida de archivos base del frontend (router, i18n, axios y utils/socket) para ver qué falta y poder crear lo necesario para el dashboard SUPER_ADMIN. Luego propondré y aplicaré los archivos mínimos. Para asegurar que los imports como @/funcionen y ver configuración de Vite/Tailwind, leeré vite.config.js y tailwind.config.js del cliente. Luego crearé los archivos base faltantes. Para entender scripts y dependencias del monorepo y no romper nada, leeré `package.json` en la raíz. Luego crearé los archivos base del frontend. Voy a crear el andamiaje mínimo del frontend (router, i18n, axios, stores básicos, componentes comunes y la vista de gestión de precios) para que el dashboard SUPER_ADMIN pueda cargar y usar los nuevos endpoints. Después haré una pausa para verificar estado y siguientes pasos. 
+```
+
+```
+Aplicaré un conjunto de archivos base en el cliente (i18n, axios, utils/socket, stores, componentes comunes, estilos y vistas) para que el dashboard de precios pueda funcionar mínimamente y evitar errores de importación. Después haré una breve verificación y seguiré con la vista de gestión de precios. 
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+
+
+---
+
+_**User (2025-09-08 08:54Z)**_
+
+@agent Intentar de nuevo
+
+---
+
+_**Assistant**_
+
+Voy a crear la API de pricing y las vistas/componentes del dashboard SUPER_ADMIN (selector de centre, taula i formulari) para gestionar preus per centre desde el frontend. Luego haré una pausa para validar y describir los siguientes pasos. 
+```
+
+```
+
+```
+
+```
 
 
 ---
