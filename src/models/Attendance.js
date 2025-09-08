@@ -264,8 +264,13 @@ Attendance.prototype.calculatePrice = async function() {
       throw new Error('Contracte no trobat per calcular preu');
     }
     
-    // Calcular preu segons contracte i estat
-    this.calculated_price = contract.calculateDayPrice(this.status);
+    // Obtenir pricing efectiu per tenant (async) i calcular
+    if (typeof contract.getEffectivePricingAsync === 'function') {
+      const effectivePricing = await contract.getEffectivePricingAsync();
+      this.calculated_price = contract.calculateDayPrice(this.status, effectivePricing);
+    } else {
+      this.calculated_price = contract.calculateDayPrice(this.status);
+    }
     
     // Si no hi ha preu aplicat manualment, utilitzar el calculat
     if (this.applied_price === null) {

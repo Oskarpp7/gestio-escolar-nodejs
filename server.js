@@ -23,6 +23,7 @@ const attendanceRoutes = require('./src/routes/attendance');
 const chatRoutes = require('./src/routes/chat');
 const dashboardRoutes = require('./src/routes/dashboard');
 const reportRoutes = require('./src/routes/report');
+const pricingRoutes = require('./src/routes/pricing');
 
 // Middleware personalitzat
 const tenantMiddleware = require('./src/middleware/tenant');
@@ -132,6 +133,7 @@ app.use('/api/attendance', authMiddleware.verifyToken, attendanceRoutes);
 app.use('/api/chat', authMiddleware.verifyToken, chatRoutes);
 app.use('/api/dashboard', authMiddleware.verifyToken, dashboardRoutes);
 app.use('/api/reports', authMiddleware.verifyToken, reportRoutes);
+app.use('/api/pricing', authMiddleware.verifyToken, pricingRoutes);
 
 // Servir fitxers estàtics (uploads)
 app.use('/uploads', express.static('storage/uploads'));

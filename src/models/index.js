@@ -8,6 +8,7 @@ const Contract = require('./Contract');
 const Attendance = require('./Attendance');
 const Invoice = require('./Invoice');
 const { ChatRoom, ChatParticipant, ChatMessage, ChatMessageRead } = require('./Chat');
+const TenantPriceConfig = require('./TenantPriceConfig');
 
 /**
  * Definició de totes les relacions entre models
@@ -47,6 +48,18 @@ Tenant.hasMany(Contract, {
 });
 
 Contract.belongsTo(Tenant, {
+  foreignKey: 'tenant_id',
+  as: 'tenant'
+});
+
+// Un tenant té moltes configuracions de preus
+Tenant.hasMany(TenantPriceConfig, {
+  foreignKey: 'tenant_id',
+  as: 'price_configs',
+  onDelete: 'CASCADE'
+});
+
+TenantPriceConfig.belongsTo(Tenant, {
   foreignKey: 'tenant_id',
   as: 'tenant'
 });
@@ -350,6 +363,7 @@ const getAllModels = () => {
     Contract,
     Attendance,
     Invoice,
+  TenantPriceConfig,
     ChatRoom,
     ChatParticipant,
     ChatMessage,
@@ -379,6 +393,7 @@ module.exports = {
   Contract,
   Attendance,
   Invoice,
+  TenantPriceConfig,
   ChatRoom,
   ChatParticipant,
   ChatMessage,

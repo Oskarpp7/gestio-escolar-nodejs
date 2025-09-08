@@ -283,12 +283,12 @@ Contract.prototype.getDiscountPercent = function() {
 };
 
 Contract.prototype.getPricing = function() {
-  // Utilitzar preus personalitzats si existeixen
+  // Prioritzar preus personalitzats per contracte
   if (this.custom_pricing) {
     return this.custom_pricing;
   }
-  
-  // Preus per defecte (en cèntims d'euro)
+
+  // Fallback a variables d'entorn si no hi ha config carregada en aquest punt
   return {
     menjador_fixe_present: parseInt(process.env.MENJADOR_FIXE_PRESENT) || 754,
     menjador_fixe_absent: parseInt(process.env.MENJADOR_FIXE_ABSENT) || 386,
@@ -298,8 +298,37 @@ Contract.prototype.getPricing = function() {
   };
 };
 
-Contract.prototype.calculateDayPrice = function(attendanceStatus) {
-  const pricing = this.getPricing();
+/**
+ * Obtenir pricing efectiu (async) amb integració per tenant.
+ * Prioritza custom_pricing del contracte, després configuració per tenant, i finalment variables d'entorn.
+ */
+Contract.prototype.getEffectivePricingAsync = async function() {
+  // Custom per contracte té prioritat
+  if (this.custom_pricing) return this.custom_pricing;
+
+  try {
+    const { loadTenantPricing } = require('../services/pricingService');
+    const tenantPricing = await loadTenantPricing(this.tenant_id);
+    if (tenantPricing) {
+      return {
+        // Mapatge a les claus utilitzades en càlculs actuals
+        menjador_fixe_present: tenantPricing.MENJADOR.FIXE.present,
+        menjador_fixe_absent: tenantPricing.MENJADOR.FIXE.absent,
+        menjador_fixe_justificat: tenantPricing.MENJADOR.FIXE.justificat,
+        menjador_esporadic_present: tenantPricing.MENJADOR.ESPORADIC.present,
+        acollida_esporadic_present: tenantPricing.ACOLLIDA.ESPORADIC.present
+      };
+    }
+  } catch (e) {
+    // Ignorar i caure al fallback
+  }
+
+  // Fallback a getPricing() per variables d'entorn
+  return this.getPricing();
+};
+
+Contract.prototype.calculateDayPrice = function(attendanceStatus, pricingOverride = null) {
+  const pricing = pricingOverride || this.getPricing();
   const discountPercent = this.getDiscountPercent();
   let price = 0;
   
@@ -352,6 +381,63 @@ Contract.prototype.getContractDescription = function() {
   const subtypeDesc = this.subtype ? ` (${this.subtype})` : '';
   
   return `${serviceDesc} - ${typeDesc}${subtypeDesc}`;
+};
+
+/**
+ * Retornar el preu unitari del servei indicat (síncron) amb descompte aplicat.
+ * Útil per integracions existents. Per preus per tenant, preferir getEffectivePricingAsync.
+ */
+Contract.prototype.calculateServicePrice = function(serviceType) {
+  const p = this.getPricing();
+  let unit = 0;
+  if (serviceType === 'MENJADOR') {
+    unit = this.contract_type === 'FIXE' ? p.menjador_fixe_present : p.menjador_esporadic_present;
+  } else if (serviceType === 'ACOLLIDA') {
+    unit = this.contract_type === 'ESPORADIC' ? p.acollida_esporadic_present : 0;
+  }
+  const discountPercent = this.getDiscountPercent();
+  if (discountPercent > 0) unit = Math.round(unit * (100 - discountPercent) / 100);
+  return { unitPrice: unit };
+};
+
+/**
+ * Resum de preus per un contracte (síncron). Proporciona valors per UI/APIs.
+ */
+Contract.prototype.calculatePricing = function() {
+  const p = this.getPricing();
+  const discountPercent = this.getDiscountPercent();
+  const applyDisc = (v) => Math.round(v * (100 - discountPercent) / 100);
+
+  const result = {
+    discountPercent,
+    service: this.service_type,
+    type: this.contract_type,
+    prices: {}
+  };
+
+  if (this.service_type === 'MENJADOR') {
+    if (this.contract_type === 'FIXE') {
+      result.prices = {
+        present: applyDisc(p.menjador_fixe_present),
+        absent: applyDisc(p.menjador_fixe_absent),
+        justificat: applyDisc(p.menjador_fixe_justificat)
+      };
+    } else {
+      result.prices = {
+        present: applyDisc(p.menjador_esporadic_present)
+      };
+    }
+  } else if (this.service_type === 'ACOLLIDA') {
+    if (this.contract_type === 'ESPORADIC') {
+      result.prices = {
+        present: applyDisc(p.acollida_esporadic_present)
+      };
+    } else {
+      result.prices = { monthly_fee: this.calculateMonthlyFee() };
+    }
+  }
+
+  return result;
 };
 
 // Mètodes estàtics
