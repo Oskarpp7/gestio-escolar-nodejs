@@ -760,7 +760,7 @@ _**Assistant**_
 
 ---
 
-_**User (2025-09-07 23:48Z)**_
+_**User (2025-09-08 07:37Z)**_
 
 @agent Enable: "Enable GPT-5 (Preview) for all clients"
 
@@ -768,7 +768,142 @@ _**User (2025-09-07 23:48Z)**_
 
 _**Assistant**_
 
-Voy a leer los modelos y rutas para entender cómo está implementado el pricing actual y añadir un nuevo modelo y endpoints de configuración de precios por centro, manteniendo el aislamiento multi-tenant. Después haré un commit y push. Faré una lectura ràpida dels models base per veure com es fa el sync i així crear el nou model de configuració de preus i exposar rutes d'API per gestionar-lo. Després validaré amb un test curt i faré commit + push. 
+Voy a leer los modelos y rutas para entender cómo está implementado el pricing actual y añadir un nuevo modelo y endpoints de configuración de precios por centro, manteniendo el aislamiento multi-tenant. Después haré un commit y push. Faré una lectura ràpida dels models base per veure com es fa el sync i així crear el nou model de configuració de preus i exposar rutes d'API per gestionar-lo. Després validaré amb un test curt i faré commit + push. Llegeixo els fitxers clau per integrar configuració de preus per tenant: models `Contract.js`, `Tenant.js`, ruta `tenant.js` i `server.js` per saber com afegir noves rutes i associacions. Després crearé el nou model i actualitzaré la lògica de càlcul. Para añadir un sistema de precios configurable por centro y APIs de gestión, crearé un nuevo modelo, un servicio de caché de precios, nuevas rutas protegidas y ajustaré el modelo `Contract` para leer esta configuración sin romper la lógica existente. Luego haré commit y push. 
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+Checkpoint: I found hardcoded pricing in `config.js`, `contracts.js`, and defaults inside `Contract`. I added a new `TenantPriceConfig` model, a `pricingService` with cache, new `/api/pricing` routes, wired them in `server.js`, and exported the model. Next, I'll integrate tenant pricing into calculation flows and add dependency, then run a quick install/test. Implementaré la integració del pricing per tenant de manera asíncrona: afegiré un mètode en `Contract` per obtenir preus efectius, ajustaré `calculateDayPrice` per acceptar override i modificaré `Attendance.calculatePrice` per usar-lo. Després afegiré la dependència `node-cache` i faré un commit + push. 
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+He integrat el sistema de preus configurable per centre i ho he deixat pujat al repo. Proper pas: crear pantalla del dashboard SUPER_ADMIN per gestionar centres/serveis/modalitats/preus.
+
+Checklist implementat:
+- Model de configuració de preus per tenant
+- Servei de preus amb cache i fallbacks a .env
+- API CRUD protegida per gestionar preus
+- Integració amb Contract/Attendance per usar preus de centre
+- Rutes cablejades i dependència instal·lada
+- Commit i push al branch main
+
+Accions fetes:
+- Afegit `TenantPriceConfig.js`: taula per centre/servei/modalitat amb preus en cèntims i descomptes BC70/BC100.
+- Afegit `pricingService.js`: cache en memòria (node-cache), lectura i normalització amb fallbacks a `config.pricing`.
+- Afegit `pricing.js`: endpoints protegits:
+  - GET `/api/pricing/tenant/:tenantId` → preus efectius del tenant
+  - POST `/api/pricing` → crea o afegeix configuracions (ADMIN/SUPER_ADMIN)
+  - PUT `/api/pricing/:id` → actualitza (ADMIN/SUPER_ADMIN)
+  - DELETE `/api/pricing/:id` → elimina/inactiva (ADMIN/SUPER_ADMIN)
+- Actualitzat `server.js` per exposar `/api/pricing`.
+- Actualitzat `index.js` amb relacions Tenant ↔ TenantPriceConfig i exportació.
+- Actualitzat `Contract.js`:
+  - `getEffectivePricingAsync()` per carregar preus de tenant
+  - `calculateDayPrice(status, pricingOverride)` accepta override
+  - `calculateServicePrice()` i `calculatePricing()` per compatibilitat amb rutes existents
+- Actualitzat `Attendance.js`: ara espera `getEffectivePricingAsync()` i calcula amb els preus del tenant.
+- Afegit `node-cache` a `package.json`.
+
+Verificació ràpida:
+- Lectors de fitxer i comprobació de sintaxi: PASS
+- Instal·lació dependències: PASS
+- Lint va fallar per falta d’arxiu de configuració ESLint (no bloquejant el canvi). Puc afegir `.eslintrc` si vols.
+
+Commit/push:
+- Hash: 1f14dc1
+- Missatge: “feat(pricing): Configuració de preus per centre (multi-tenant) + API i cache”
+- Fitxers modificats/afegits: 10
+
+Notes:
+- No he tocat els preus hardcoded a `contracts.js` ni `config.js` per compatibilitat; actuen de fallback. Podem migrar aquesta ruta a l’ús del servei en una següent iteració.
+- Els endpoints requereixen autenticació; ADMIN pot gestionar només el seu tenant, SUPER_ADMIN qualsevol.
+
+Propera millora (petita i útil):
+- Afegir `.eslintrc` i script de test mínim per l’API de pricing.
+- Endpoints per llistat/paginació de registres de `TenantPriceConfig` per UI.
+
+Requirements coverage:
+- Sistema de preus configurable per escola: Done
+- API per crear/editar preus/modalitats: Done
+- Manté multi-tenancy i rols: Done
+- Preparat per dashboard SUPER_ADMIN: Done
+
+---
+
+_**User (2025-09-08 07:40Z)**_
+
+# 📋 **PROMPT GENÈRIC PER FORMAT COPY-PASTE COMPLET**
+
+## 🔄 **PROMPT PER INSTRUIR FORMAT CONSISTENT:**
+
+```markdown
+# 🎯 INSTRUCCIONS DE FORMAT PER A TOTES LES RESPOSTES
+
+Des d'ara, SEMPRE respon seguint aquest format per facilitar copy-paste complet de la conversa:
+
+## REGLES DE RESPOSTA OBLIGATÒRIES:
+1. **Seccions clares** amb headers markdown (##, ###, ####)
+2. **Codi sempre amb triple backticks** i especificador de llenguatge
+3. **Un sol bloc per fitxer complet** - mai fragmentar codi
+4. **Explicacions concises** abans i després del codi
+5. **Format estructurat** amb numeració i bullets clars
+6. **Separadors visuals** entre seccions diferents
+7. **Timestamp inclòs** quan sigui rellevant
+
+## EXEMPLE FORMAT DESITJAT:
+```
+// src/models/Example.js - Descripció clara
+const express = require('express');
+// ... codi complet functional
+```
+
+## OBJECTIU:
+- Poder seleccionar i copiar TOTA la conversa fàcilment
+- Format markdown consistent i net
+- Codi sempre funcional i complet
+- Headers clars per navegació ràpida
+
+**APLICA AQUEST FORMAT SEMPE A TOTES LES RESPOSTES **
+
+
+
+
+---
+
+_**Assistant**_
+
+
 
 ---
 

@@ -7,10 +7,7 @@ const logger = require('../utils/logger');
  */
 class TenantMiddleware {
   
-  // Cache dels tenants per millorar rendiment
-  static tenantCache = new Map();
-  static cacheExpiry = new Map();
-  static CACHE_TTL = parseInt(process.env.TENANT_CACHE_TTL) || 3600000; // 1 hora
+  // Cache dels tenants per millorar rendiment (definides després de la classe)
   
   /**
    * Extreure tenant del request
@@ -249,7 +246,7 @@ class TenantMiddleware {
       const limits = req.tenant.limits || {};
       
       switch (limitType) {
-        case 'users':
+        case 'users': {
           const userCount = await req.tenant.countUsers();
           if (userCount >= (limits.max_users || Infinity)) {
             return res.status(403).json({
@@ -258,8 +255,8 @@ class TenantMiddleware {
             });
           }
           break;
-          
-        case 'students':
+        }
+        case 'students': {
           const studentCount = await req.tenant.countStudents();
           if (studentCount >= (limits.max_students || Infinity)) {
             return res.status(403).json({
@@ -268,10 +265,14 @@ class TenantMiddleware {
             });
           }
           break;
-          
-        case 'storage':
+        }
+        case 'storage': {
           // TODO: Implementar càlcul d'espai utilitzat
           break;
+        }
+        default: {
+          break;
+        }
       }
       
       next();
@@ -301,6 +302,11 @@ class TenantMiddleware {
     };
   }
 }
+
+// Definir camps estàtics fora de la classe per compatibilitat ESLint/Node
+TenantMiddleware.tenantCache = new Map();
+TenantMiddleware.cacheExpiry = new Map();
+TenantMiddleware.CACHE_TTL = parseInt(process.env.TENANT_CACHE_TTL) || 3600000; // 1 hora
 
 // Iniciar neteja automàtica del cache
 if (process.env.NODE_ENV !== 'test') {

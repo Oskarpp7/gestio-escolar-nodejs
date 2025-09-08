@@ -1,5 +1,5 @@
 const express = require('express');
-const { body, param } = require('express-validator');
+const { body, param, query, validationResult } = require('express-validator');
 const { TenantPriceConfig } = require('../models');
 const { loadTenantPricing, invalidateTenantPricing } = require('../services/pricingService');
 const auth = require('../middleware/auth');
@@ -16,6 +16,39 @@ router.get('/tenant/:tenantId', auth.verifyToken, auth.requireTenantAccess, asyn
     return res.json({ success: true, pricing });
   } catch (err) {
     return res.status(500).json({ success: false, message: 'Error obtenint preus', error: err.message });
+  }
+});
+
+// GET: Llistar registres de configuració (paginat)
+router.get('/', auth.verifyToken, requireAdmin, [
+  query('tenant_id').optional().isUUID(),
+  query('page').optional().isInt({ min: 1 }),
+  query('limit').optional().isInt({ min: 1, max: 100 })
+], async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ success: false, errors: errors.array() });
+  }
+  try {
+    const { tenant_id, page = 1, limit = 20 } = req.query;
+    const where = {};
+    if (tenant_id) where.tenant_id = tenant_id;
+    if (req.user.role !== 'SUPER_ADMIN') where.tenant_id = req.tenantId;
+
+    const offset = (parseInt(page) - 1) * parseInt(limit);
+    const { count, rows } = await TenantPriceConfig.findAndCountAll({
+      where,
+      order: [['updated_at', 'DESC']],
+      limit: parseInt(limit),
+      offset
+    });
+    return res.json({
+      success: true,
+      data: rows,
+      pagination: { page: parseInt(page), limit: parseInt(limit), total: count }
+    });
+  } catch (err) {
+    return res.status(500).json({ success: false, message: 'Error llistant configuracions', error: err.message });
   }
 });
 
@@ -36,6 +69,15 @@ router.post('/', auth.verifyToken, requireAdmin, [
     // Si no és SUPER_ADMIN, forçar tenant_id de l'usuari
     const payload = { ...req.body };
     if (req.user.role !== 'SUPER_ADMIN') payload.tenant_id = req.tenantId;
+
+    // Validació de negoci: per MENJADOR, ESPORADIC.present > FIXE.present
+    if (payload.service_type === 'MENJADOR') {
+      if (payload.contract_type === 'ESPORADIC' && payload.price_esporadic != null && payload.price_present != null) {
+        if (payload.price_esporadic <= payload.price_present) {
+          return res.status(400).json({ success: false, message: 'El preu esporàdic ha de ser superior al preu fixe present' });
+        }
+      }
+    }
 
     const created = await TenantPriceConfig.create(payload);
     invalidateTenantPricing(created.tenant_id);
@@ -58,7 +100,20 @@ router.put('/:id', auth.verifyToken, requireAdmin, [
       return res.status(403).json({ success: false, message: 'Accés denegat' });
     }
 
-    await item.update(req.body);
+    // Validació de negoci similar a POST
+    const nextPayload = { ...req.body };
+    const candidate = { ...item.toJSON(), ...nextPayload };
+    if (candidate.service_type === 'MENJADOR') {
+      const fixePresent = candidate.price_present;
+      const espPresent = candidate.price_esporadic;
+      if (candidate.contract_type === 'ESPORADIC' && espPresent != null && fixePresent != null) {
+        if (espPresent <= fixePresent) {
+          return res.status(400).json({ success: false, message: 'El preu esporàdic ha de ser superior al preu fixe present' });
+        }
+      }
+    }
+
+    await item.update(nextPayload);
     invalidateTenantPricing(item.tenant_id);
     return res.json({ success: true, data: item });
   } catch (err) {
