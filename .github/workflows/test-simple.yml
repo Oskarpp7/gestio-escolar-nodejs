@@ -1,4 +1,4 @@
-name: 🧪 Test Suite (Anti-Hang)
+name: ✅ Quick CI Check
 
 on:
   push:

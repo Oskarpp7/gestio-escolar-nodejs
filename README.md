@@ -1,5 +1,8 @@
 # 🏫 **MouT Serveis - Gestió Escolar Multi-tenant**
 
+[![Quick CI Check](https://github.com/Oskarpp7/gestio-escolar-nodejs/actions/workflows/test-simple.yml/badge.svg)](https://github.com/Oskarpp7/gestio-escolar-nodejs/actions/workflows/test-simple.yml)
+[![Full Test Suite](https://github.com/Oskarpp7/gestio-escolar-nodejs/actions/workflows/full-test.yml/badge.svg)](https://github.com/Oskarpp7/gestio-escolar-nodejs/actions/workflows/full-test.yml)
+
 [![Node.js](https://img.shields.io/badge/Node.js-18+-green.svg)](https://nodejs.org/)
 [![Express.js](https://img.shields.io/badge/Express.js-4.18+-blue.svg)](https://expressjs.com/)
 [![Vue.js](https://img.shields.io/badge/Vue.js-3.0+-green.svg)](https://vuejs.org/)

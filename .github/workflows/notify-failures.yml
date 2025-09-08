@@ -1,0 +1,26 @@
+name: "🚨 Notificacions Fallades"
+
+on:
+  workflow_run:
+    workflows: ["✅ Quick CI Check"]
+    types: [completed]
+
+jobs:
+  notify-failure:
+    if: ${{ github.event.workflow_run.conclusion == 'failure' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Imprimir info fallada
+        run: |
+          echo "🚨 ALERTA FALLADA CI"
+          echo "Workflow: ${{ github.event.workflow_run.name }}"
+          echo "Branca:   ${{ github.event.workflow_run.head_branch }}"
+          echo "Commit:   ${{ github.event.workflow_run.head_sha }}"
+          echo "URL:      ${{ github.event.workflow_run.html_url }}"
+      # - name: Slack (exemple)
+      #   uses: slackapi/slack-github-action@v1.24.0
+      #   with:
+      #     payload: |
+      #       { "text": "❌ CI ha fallat en ${{ github.event.workflow_run.head_branch }} @ ${{ github.event.workflow_run.head_sha }}\n${{ github.event.workflow_run.html_url }}" }
+      #   env:
+      #     SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}

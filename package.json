@@ -20,7 +20,9 @@
     "seed": "node src/seeders/seed.js",
     "db:reset": "node src/utils/resetDatabase.js",
   "lint": "eslint src/ --max-warnings=0",
-    "lint:fix": "eslint src/ --fix"
+  "lint:fix": "eslint src/ --fix",
+  "ci:trigger-full": "bash scripts/trigger-full-test.sh",
+  "ci:status": "echo 'Verifica: https://github.com/Oskarpp7/gestio-escolar-nodejs/actions'"
   },
   "keywords": [
     "multi-tenant",
