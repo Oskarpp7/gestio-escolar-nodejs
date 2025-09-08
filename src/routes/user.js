@@ -3,7 +3,7 @@ const { body, param, query } = require('express-validator');
 const AuthMiddleware = require('../middleware/auth');
 const TenantMiddleware = require('../middleware/tenant');
 const { handleValidation, catchAsync } = require('../middleware/errorHandler');
-const { User, Tenant } = require('../models');
+const { User, Student, Contract, Attendance, Chat } = require('../models');
 const logger = require('../utils/logger');
 
 const router = express.Router();

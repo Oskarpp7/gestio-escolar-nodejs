@@ -1,16 +1,13 @@
-name: 🧪 Test Suite
+name: 🧪 Test Suite (Anti-Hang)
 
 on:
   push:
-    branches: [ main, develop ]
+    branches: [ main ]
   pull_request:
-    branches: [ main, develop ]
-  schedule:
-    # Executar tests cada dia a les 2:00 AM
-    - cron: '0 2 * * *'
+    branches: [ main ]
 
 env:
-  NODE_VERSION: '18.x'
+  NODE_VERSION: '20.x'
 
 jobs:
   # === JOB 1: LINT I FORMAT ===

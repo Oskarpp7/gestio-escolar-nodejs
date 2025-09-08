@@ -1,6 +1,6 @@
 const express = require('express');
 const { body, validationResult, param, query } = require('express-validator');
-const { Contract, Student, User, Tenant } = require('../models');
+const { User, Student, Contract, Attendance } = require('../models');
 const auth = require('../middleware/auth');
 const tenantMiddleware = require('../middleware/tenant');
 const logger = require('../utils/logger');

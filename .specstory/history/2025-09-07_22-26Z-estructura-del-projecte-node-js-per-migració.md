@@ -2291,3 +2291,1526 @@ _**Assistant**_
 
 ---
 
+_**User (2025-09-08 10:19Z)**_
+
+# 🚨 **REPARACIÓ COMPLETA ERRORS GITHUB ACTIONS - GESTIÓ ESCOLAR NODE.JS**
+
+## CONTEXT DEL PROBLEMA
+El workflow de GitHub Actions ha fallat amb múltiples errors crítics que bloquegen la pipeline de CI/CD. Necesito una solució completa i sistemàtica per arreglar tots els problemes detectats.
+
+## ERRORS DETECTATS A GITHUB ACTIONS:
+- 🔍 **Lint & Format:** 11 errors (2m 14s) - Regles ESLint fallant
+- 🧪 **Backend Tests:** Fallades en Node 18.x i 20.x - Tests no passen
+- 🧪 **Frontend Tests:** Fallada + cancel·lació - Configuració problemes  
+- 🔒 **Security Scan:** Vulnerabilitats dependencies - npm audit issues
+- ⚡ **Performance Tests:** Problemes rendiment - Timeouts o configuració
+- 📢 **Notify Results:** Fallada notificacions - 2 anotacions
+
+## TASQUES A EXECUTAR SISTEMÀTICAMENT:
+
+### 1️⃣ ARREGLAR ERRORS ESLINT I LINT
+```bash
+# Primer cancel·lar procés actual si cal:
+# Ctrl+C per aturar npm run lint actual
+
+# Executar lint amb detalls per veure errors específics
+npm run lint
+
+# Arreglar automàticament el que es pugui
+npm run lint -- --fix
+
+# Si hi ha errors que no es poden arreglar automàticament, mostra'ls i proposa solucions
+```
+
+### 2️⃣ OPTIMITZAR CONFIGURACIÓ ESLINT
+Revisar i ajustar `.eslintrc.json` per ser menys estricte temporalment:
+
+```json
+{
+  "env": { 
+    "es2021": true, 
+    "node": true, 
+    "jest": true 
+  },
+  "extends": ["eslint:recommended"],
+  "parserOptions": { 
+    "ecmaVersion": 12, 
+    "sourceType": "script" 
+  },
+  "rules": {
+    "no-unused-vars": ["warn", { 
+      "args": "after-used", 
+      "ignoreRestSiblings": true 
+    }],
+    "no-console": "off",
+    "no-undef": "error",
+    "quotes": "off",
+    "semi": "off"
+  },
+  "ignorePatterns": [
+    "client/dist/**", 
+    "node_modules/**", 
+    "storage/**", 
+    "logs/**",
+    "coverage/**",
+    "*.min.js"
+  ]
+}
+```
+
+### 3️⃣ ARREGLAR TESTS BACKEND
+```bash
+# Executar tests backend per veure errors específics
+npm test
+
+# Revisar configuració Jest si falla
+# Assegurar variables d'entorn per testing
+# Verificar conexió base de dades en tests
+```
+
+Si els tests fallen, crear configuració Jest robusta:
+
+```javascript
+// jest.config.js
+module.exports = {
+  testEnvironment: 'node',
+  setupFilesAfterEnv: ['<rootDir>/tests/setup.js'],
+  testMatch: ['**/tests/**/*.test.js'],
+  testTimeout: 30000,
+  collectCoverageFrom: [
+    'src/**/*.js',
+    '!src/**/*.test.js',
+    '!src/config/**'
+  ],
+  coverageDirectory: 'coverage',
+  verbose: true
+};
+```
+
+### 4️⃣ ARREGLAR TESTS FRONTEND
+```bash
+# Navegar a client i executar tests
+cd client
+npm test
+
+# Si no existeixen tests, crear tests bàsics per components crítics
+```
+
+### 5️⃣ SOLUCIONAR SECURITY SCAN
+```bash
+# Audit de seguretat
+npm audit
+
+# Arreglar vulnerabilitats automàtiques
+npm audit fix
+
+# Si hi ha vulnerabilitats crítiques, actualitzar dependencies manuals
+npm update
+
+# Revisar per secrets hardcoded
+grep -r "password\|secret\|api_key\|token" src/ --exclude-dir=node_modules || echo "No secrets found"
+```
+
+### 6️⃣ OPTIMITZAR WORKFLOW GITHUB ACTIONS
+Revisar i millorar `.github/workflows/test.yml`:
+
+```yaml
+name: Test Suite
+
+on: 
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  lint:
+    name: 🔍 Lint & Format
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Run ESLint
+        run: npm run lint -- --max-warnings=10
+        
+  backend-tests:
+    name: 🧪 Backend Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+      - run: npm ci
+      - run: npm test -- --passWithNoTests --coverage
+        env:
+          NODE_ENV: test
+          
+  security:
+    name: 🔒 Security Scan
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: 'npm'
+      - run: npm ci
+      - run: npm audit --audit-level moderate
+```
+
+### 7️⃣ CREAR SCRIPT DE REPARACIÓ AUTOMÀTICA
+```bash
+#!/bin/bash
+# fix-ci-errors.sh
+
+set -e  # Exit on any error
+
+echo "🔧 Iniciant reparació errors CI/CD..."
+
+# Clean install
+echo "🧹 Netejant i reinstal·lant dependencies..."
+rm -rf node_modules package-lock.json
+npm install
+
+# Fix lint issues
+echo "📝 Arreglant errors lint..."
+npm run lint -- --fix || echo "⚠️ Alguns errors lint no s'han pogut arreglar automàticament"
+
+# Update dependencies amb vulnerabilitats
+echo "📦 Actualitzant dependencies..."
+npm audit fix || echo "⚠️ Algunes vulnerabilitats requereixen atenció manual"
+
+# Run tests
+echo "🧪 Executant tests..."
+npm test -- --passWithNoTests || echo "⚠️ Alguns tests han fallat"
+
+# Frontend si existeix
+if [ -d "client" ]; then
+    echo "🎨 Processant frontend..."
+    cd client
+    npm install
+    npm run build || echo "⚠️ Build frontend ha fallat"
+    cd ..
+fi
+
+echo "✅ Procés de reparació completat!"
+echo "📋 Revisa els warnings anteriors per accions manuals necessàries"
+```
+
+### 8️⃣ VERIFICACIÓ I COMMIT FINAL
+```bash
+# Executar verificació final
+npm run lint -- --max-warnings=5
+npm test -- --passWithNoTests
+
+# Si tot passa, fer commit
+git add .
+git commit -m "fix(ci): Reparació completa errors GitHub Actions
+
+🔧 Fixes aplicats:
+- ESLint configuració optimitzada i errors corregits
+- Tests backend estabilitzats amb configuració robusta  
+- Dependencies actualitzades i vulnerabilitats arreglades
+- Workflow GitHub Actions optimitzat amb timeouts
+- Scripts reparació automàtica afegits
+
+✅ Pipeline CI/CD funcional
+🚀 Ready per desenvolupament continu"
+
+git push origin main
+```
+
+## OBJECTIUS D'AQUESTA REPARACIÓ:
+1. **Eliminar tots els errors lint** que bloquegen pipeline
+2. **Estabilitzar tests backend** amb configuració robusta
+3. **Arreglar vulnerabilitats seguretat** dependency updates
+4. **Optimitzar workflow CI/CD** per evitar timeouts
+5. **Crear scripts manteniment** per prevenir futurs problemes
+
+## RESULTAT ESPERAT:
+- ✅ Pipeline GitHub Actions completament verda
+- ✅ Lint passing sense errors crítics
+- ✅ Tests executant-se correctament
+- ✅ Security scan net sense vulnerabilitats
+- ✅ Workflow optimitzat i eficient
+- ✅ Scripts preventius per manteniment
+
+**Executa aquestes tasques systematicament una per una, reportant errors específics per cada pas que necessiti atenció manual adicional.**
+
+
+
+---
+
+_**Assistant**_
+
+Para atacar los fallos de CI de forma fiable, voy a: 1) ejecutar lint y tests localmente para ver el estado real, 2) revisar y ajustar configuración de ESLint/Jest y workflow, 3) proponer/aplicar fixes y reintentar. 
+
+---
+
+_**User (2025-09-08 10:46Z)**_
+
+# 🎯 **PROMPT COMPLET PER GPT-5: REPARACIÓ URGENT LINT ENCALLAT + ERRORS CI**
+
+```markdown
+# 🎯 INSTRUCCIONS DE FORMAT PER A TOTES LES RESPOSTES
+
+Des d'ara, SEMPRE respon seguint aquest format per facilitar copy-paste complet de la conversa:
+
+## REGLES DE RESPOSTA OBLIGATÒRIES:
+1. **Seccions clares** amb headers markdown (##, ###, ####)
+2. **Codi sempre amb triple backticks** i especificador de llenguatge
+3. **Un sol bloc per fitxer complet** - mai fragmentar codi
+4. **Explicacions concises** abans i després del codi
+5. **Format estructurat** amb numeració i bullets clars
+6. **Separadors visuals** entre seccions diferents
+
+---
+
+# 🚨 **URGENT: LINT ENCALLAT + REPARACIÓ ERRORS GITHUB ACTIONS**
+
+## SITUACIÓ CRÍTICA ACTUAL
+- **npm run lint --silent** porta més de 15 minuts executant-se sense acabar
+- **GitHub Actions** ha fallat amb múltiples errors crítics bloquejant CI/CD
+- **Pipeline bloquejada** impedeix desenvolupament normal
+
+## ERRORS GITHUB ACTIONS DETECTATS:
+- 🔍 **Lint & Format:** 11 errors (2m 14s)
+- 🧪 **Backend Tests:** Fallades Node 18.x i 20.x
+- 🧪 **Frontend Tests:** Fallada + cancel·lació
+- 🔒 **Security Scan:** Vulnerabilitats dependencies
+- ⚡ **Performance Tests:** Timeouts/configuració
+- 📢 **Notify Results:** 2 anotacions fallades
+
+## TASQUES URGENTS A EXECUTAR:
+
+### 1️⃣ CANCEL·LAR LINT ENCALLAT I DIAGNÒSTIC RÀPID
+```
+# PRIMER: Cancel·lar procés actual immediatament
+# Ctrl+C o Cmd+C per aturar npm run lint
+
+# Diagnòstic ràpid del problema
+echo "🔍 Diagnosticant problemes lint..."
+
+# Verificar fitxers que causen problemes
+find src/ -name "*.js" -exec wc -l {} \; | sort -n | tail -5
+
+# Lint només un fitxer petit per testejar
+npx eslint src/app.js --no-ignore || echo "ESLint té problemes de configuració"
+```
+
+### 2️⃣ LINT INCREMENTAL I EFICIENT
+```
+# Lint només fitxers modificats recentment
+git diff --name-only HEAD~1 | grep -E '\.(js|vue|ts)$' | xargs npx eslint || echo "Alguns fitxers tenen errors"
+
+# Si funciona, lint amb fix només els modificats
+git diff --name-only HEAD~1 | grep -E '\.(js|vue|ts)$' | xargs npx eslint --fix
+
+# Configurar lint més ràpid permanentment
+npm run lint -- --cache --max-warnings=20 || echo "Errors trobats, continuant..."
+```
+
+### 3️⃣ CONFIGURACIÓ ESLINT OPTIMITZADA IMMEDIATA
+Crear `.eslintrc.json` més permissiu temporalment:
+
+```
+{
+  "env": { 
+    "es2021": true, 
+    "node": true, 
+    "jest": true,
+    "browser": true
+  },
+  "extends": ["eslint:recommended"],
+  "parserOptions": { 
+    "ecmaVersion": 2021, 
+    "sourceType": "module" 
+  },
+  "rules": {
+    "no-unused-vars": "warn",
+    "no-console": "off",
+    "no-undef": "error",
+    "quotes": "off",
+    "semi": "off",
+    "comma-dangle": "off",
+    "indent": "off",
+    "space-before-function-paren": "off",
+    "no-trailing-spaces": "warn"
+  },
+  "ignorePatterns": [
+    "client/dist/**", 
+    "node_modules/**", 
+    "storage/**", 
+    "logs/**",
+    "coverage/**",
+    "*.min.js",
+    "build/**",
+    "public/build/**"
+  ]
+}
+```
+
+### 4️⃣ REPARACIÓ TESTS BACKEND RÀPIDA
+```
+# Test ràpid per veure estat
+npm test -- --verbose --passWithNoTests --testTimeout=10000 || echo "Tests fallant, continuant diagnòstic..."
+
+# Si Jest no està configurat correctament, crear configuració mínima
+cat > jest.config.js << 'EOF'
+module.exports = {
+  testEnvironment: 'node',
+  testMatch: ['**/tests/**/*.test.js', '**/__tests__/**/*.js'],
+  testTimeout: 15000,
+  setupFilesAfterEnv: ['<rootDir>/tests/setup.js'],
+  collectCoverageFrom: [
+    'src/**/*.js',
+    '!src/**/*.test.js',
+    '!src/config/**'
+  ],
+  coverageDirectory: 'coverage',
+  verbose: true,
+  forceExit: true,
+  detectOpenHandles: true
+};
+EOF
+
+# Crear setup bàsic si no existeix
+mkdir -p tests
+cat > tests/setup.js << 'EOF'
+// Test setup básic
+process.env.NODE_ENV = 'test';
+process.env.JWT_SECRET = 'test-secret';
+process.env.DB_SQLITE_PATH = ':memory:';
+
+// Timeout global per evitar tests encallats
+jest.setTimeout(15000);
+EOF
+```
+
+### 5️⃣ SECURITY FIX RÀPID
+```
+# Audit ràpid i fix automàtic
+npm audit --audit-level=moderate || echo "Vulnerabilitats trobades"
+
+# Fix automàtic el que es pugui
+npm audit fix || echo "Algunes vulnerabilitats requereixen atenció manual"
+
+# Update dependencies crítics
+npm update --save
+
+# Verificar secrets hardcoded (ràpid)
+grep -r "password\|secret\|api_key\|token" src/ --exclude-dir=node_modules --exclude="*.test.js" || echo "No s'han trobat secrets obviant"
+```
+
+### 6️⃣ WORKFLOW GITHUB ACTIONS SIMPLIFICAT
+Reemplaçar `.github/workflows/test.yml` amb versió més robusta:
+
+```
+name: 🧪 Test Suite (Simplified)
+
+on: 
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  lint-and-test:
+    name: 🔍 Lint & Test
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    
+    steps:
+      - name: 📥 Checkout
+        uses: actions/checkout@v4
+      
+      - name: ⚡ Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: 'npm'
+      
+      - name: 📦 Install
+        run: |
+          npm ci
+          
+      - name: 🔍 Lint (Permissive)
+        run: |
+          npm run lint -- --max-warnings=50 || echo "Lint errors found but continuing"
+          
+      - name: 🧪 Test
+        run: |
+          npm test -- --passWithNoTests --coverage=false
+        env:
+          NODE_ENV: test
+          
+      - name: 🔒 Security (Basic)
+        run: |
+          npm audit --audit-level=high || echo "Vulnerabilities found but not blocking"
+
+  build-check:
+    name: 🏗️ Build Check
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: 'npm'
+      - run: npm ci
+      - name: Build Frontend
+        run: |
+          if [ -d "client" ]; then
+            cd client
+            npm install
+            npm run build || echo "Build failed but not blocking"
+          else
+            echo "No frontend to build"
+          fi
+```
+
+### 7️⃣ SCRIPT REPARACIÓ AUTOMÀTICA RÀPIDA
+```
+#!/bin/bash
+# quick-fix-ci.sh
+
+set -e
+echo "🚨 REPARACIÓ RÀPIDA CI ERRORS..."
+
+# Kill any hanging processes
+pkill -f "eslint" || echo "No eslint processes to kill"
+
+# Clean and fast install
+echo "🧹 Clean install..."
+rm -rf node_modules/.cache .eslintcache
+npm install --prefer-offline
+
+# Quick lint fix on modified files only
+echo "📝 Quick lint fix..."
+git diff --name-only HEAD~3 | grep -E '\.(js|vue|ts)$' | head -10 | xargs npx eslint --fix || echo "Some lint errors remain"
+
+# Quick dependency update
+echo "🔒 Quick security fix..."
+npm audit fix --only=prod || echo "Some vulnerabilities need manual fixing"
+
+# Basic test
+echo "🧪 Quick test check..."
+npm test -- --passWithNoTests --testTimeout=5000 --maxWorkers=2 || echo "Tests need attention"
+
+echo "✅ Quick fixes applied! Check individual errors manually."
+```
+
+### 8️⃣ COMMIT RÀPID I PUSH
+```
+# Executar script reparació
+chmod +x quick-fix-ci.sh
+./quick-fix-ci.sh
+
+# Commit fixes
+git add .
+git commit -m "fix(urgent): Reparació ràpida lint encallat + CI errors
+
+🚨 URGENT FIXES:
+- Cancel·lat lint encallat que portava +15min
+- ESLint configuració optimitzada i menys estricta  
+- Jest configuració robusta amb timeouts
+- Dependencies actualitzades (security)
+- Workflow CI simplificat i més permissiu
+- Scripts reparació ràpida afegits
+
+⚡ Lint ara executa en segons, no minuts
+🧪 Tests amb timeout i exit forçat
+🔒 Vulnerabilitats crítiques arreglades
+🚀 CI pipeline més estable i ràpid
+
+Next: Revisar errors específics i polir configuració"
+
+# Push immediat
+git push origin main
+
+# Verificar que CI començi a funcionar
+echo "🔄 Verificar GitHub Actions en uns minuts..."
+```
+
+## OBJECTIUS AQUESTA REPARACIÓ URGENT:
+1. **Cancel·lar lint encallat** - Solució immediata
+2. **Lint funcional en segons** - No més esperes de 15+ minuts  
+3. **CI pipeline funcional** - Encara que permissiu temporalment
+4. **Tests que passen** - Configuració robusta amb timeouts
+5. **Security bàsic** - Vulnerabilitats crítiques arreglades
+
+## RESULTAT ESPERAT IMMEDIAT:
+- ✅ Lint executant en 10-30 segons màxim
+- ✅ Tests passant amb configuració robusta
+- ✅ CI pipeline verda (encara que permissiva)
+- ✅ No més processos encallats
+- ✅ Desenvolupament pot continuar normalment
+
+## SEGÜENTS PASSOS (DESPRÉS D'AQUESTA REPARACIÓ):
+1. Revisar logs específics errors restants
+2. Fer configuració ESLint més estricta gradualment
+3. Afegir tests específics fallants
+4. Optimitzar performance CI/CD
+5. Implementar pre-commit hooks per prevenir
+
+**EXECUTA AQUESTES TASQUES IMMEDIATAMENT PER DESBLOQUEJAR EL DESENVOLUPAMENT.**
+
+La prioritat és recuperar funcionalitat bàsica, després es pot polir configuració gradualment sense bloquejar el workflow diari.
+```
+
+Aquest prompt està preparat per copy-paste directe a GPT-5 i abordarà el problema immediat del lint encallat mentre proporciona una solució sistemàtica per tots els errors de GitHub Actions.
+
+
+---
+
+_**Assistant**_
+
+
+
+---
+
+_**User (2025-09-08 10:49Z)**_
+
+# 🎯 **PROMPT COMPLET PER GPT-5: REPARACIÓ URGENT LINT ENCALLAT + ERRORS CI**
+
+```markdown
+# 🎯 INSTRUCCIONS DE FORMAT PER A TOTES LES RESPOSTES
+
+Des d'ara, SEMPRE respon seguint aquest format per facilitar copy-paste complet de la conversa:
+
+## REGLES DE RESPOSTA OBLIGATÒRIES:
+1. **Seccions clares** amb headers markdown (##, ###, ####)
+2. **Codi sempre amb triple backticks** i especificador de llenguatge
+3. **Un sol bloc per fitxer complet** - mai fragmentar codi
+4. **Explicacions concises** abans i després del codi
+5. **Format estructurat** amb numeració i bullets clars
+6. **Separadors visuals** entre seccions diferents
+
+---
+
+# 🚨 **URGENT: LINT ENCALLAT + REPARACIÓ ERRORS GITHUB ACTIONS**
+
+## SITUACIÓ CRÍTICA ACTUAL
+- **npm run lint --silent** porta més de 15 minuts executant-se sense acabar
+- **GitHub Actions** ha fallat amb múltiples errors crítics bloquejant CI/CD
+- **Pipeline bloquejada** impedeix desenvolupament normal
+
+## ERRORS GITHUB ACTIONS DETECTATS:
+- 🔍 **Lint & Format:** 11 errors (2m 14s)
+- 🧪 **Backend Tests:** Fallades Node 18.x i 20.x
+- 🧪 **Frontend Tests:** Fallada + cancel·lació
+- 🔒 **Security Scan:** Vulnerabilitats dependencies
+- ⚡ **Performance Tests:** Timeouts/configuració
+- 📢 **Notify Results:** 2 anotacions fallades
+
+## TASQUES URGENTS A EXECUTAR:
+
+### 1️⃣ CANCEL·LAR LINT ENCALLAT I DIAGNÒSTIC RÀPID
+```
+# PRIMER: Cancel·lar procés actual immediatament
+# Ctrl+C o Cmd+C per aturar npm run lint
+
+# Diagnòstic ràpid del problema
+echo "🔍 Diagnosticant problemes lint..."
+
+# Verificar fitxers que causen problemes
+find src/ -name "*.js" -exec wc -l {} \; | sort -n | tail -5
+
+# Lint només un fitxer petit per testejar
+npx eslint src/app.js --no-ignore || echo "ESLint té problemes de configuració"
+```
+
+### 2️⃣ LINT INCREMENTAL I EFICIENT
+```
+# Lint només fitxers modificats recentment
+git diff --name-only HEAD~1 | grep -E '\.(js|vue|ts)$' | xargs npx eslint || echo "Alguns fitxers tenen errors"
+
+# Si funciona, lint amb fix només els modificats
+git diff --name-only HEAD~1 | grep -E '\.(js|vue|ts)$' | xargs npx eslint --fix
+
+# Configurar lint més ràpid permanentment
+npm run lint -- --cache --max-warnings=20 || echo "Errors trobats, continuant..."
+```
+
+### 3️⃣ CONFIGURACIÓ ESLINT OPTIMITZADA IMMEDIATA
+Crear `.eslintrc.json` més permissiu temporalment:
+
+```
+{
+  "env": { 
+    "es2021": true, 
+    "node": true, 
+    "jest": true,
+    "browser": true
+  },
+  "extends": ["eslint:recommended"],
+  "parserOptions": { 
+    "ecmaVersion": 2021, 
+    "sourceType": "module" 
+  },
+  "rules": {
+    "no-unused-vars": "warn",
+    "no-console": "off",
+    "no-undef": "error",
+    "quotes": "off",
+    "semi": "off",
+    "comma-dangle": "off",
+    "indent": "off",
+    "space-before-function-paren": "off",
+    "no-trailing-spaces": "warn"
+  },
+  "ignorePatterns": [
+    "client/dist/**", 
+    "node_modules/**", 
+    "storage/**", 
+    "logs/**",
+    "coverage/**",
+    "*.min.js",
+    "build/**",
+    "public/build/**"
+  ]
+}
+```
+
+### 4️⃣ REPARACIÓ TESTS BACKEND RÀPIDA
+```
+# Test ràpid per veure estat
+npm test -- --verbose --passWithNoTests --testTimeout=10000 || echo "Tests fallant, continuant diagnòstic..."
+
+# Si Jest no està configurat correctament, crear configuració mínima
+cat > jest.config.js << 'EOF'
+module.exports = {
+  testEnvironment: 'node',
+  testMatch: ['**/tests/**/*.test.js', '**/__tests__/**/*.js'],
+  testTimeout: 15000,
+  setupFilesAfterEnv: ['<rootDir>/tests/setup.js'],
+  collectCoverageFrom: [
+    'src/**/*.js',
+    '!src/**/*.test.js',
+    '!src/config/**'
+  ],
+  coverageDirectory: 'coverage',
+  verbose: true,
+  forceExit: true,
+  detectOpenHandles: true
+};
+EOF
+
+# Crear setup bàsic si no existeix
+mkdir -p tests
+cat > tests/setup.js << 'EOF'
+// Test setup básic
+process.env.NODE_ENV = 'test';
+process.env.JWT_SECRET = 'test-secret';
+process.env.DB_SQLITE_PATH = ':memory:';
+
+// Timeout global per evitar tests encallats
+jest.setTimeout(15000);
+EOF
+```
+
+### 5️⃣ SECURITY FIX RÀPID
+```
+# Audit ràpid i fix automàtic
+npm audit --audit-level=moderate || echo "Vulnerabilitats trobades"
+
+# Fix automàtic el que es pugui
+npm audit fix || echo "Algunes vulnerabilitats requereixen atenció manual"
+
+# Update dependencies crítics
+npm update --save
+
+# Verificar secrets hardcoded (ràpid)
+grep -r "password\|secret\|api_key\|token" src/ --exclude-dir=node_modules --exclude="*.test.js" || echo "No s'han trobat secrets obviant"
+```
+
+### 6️⃣ WORKFLOW GITHUB ACTIONS SIMPLIFICAT
+Reemplaçar `.github/workflows/test.yml` amb versió més robusta:
+
+```
+name: 🧪 Test Suite (Simplified)
+
+on: 
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  lint-and-test:
+    name: 🔍 Lint & Test
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    
+    steps:
+      - name: 📥 Checkout
+        uses: actions/checkout@v4
+      
+      - name: ⚡ Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: 'npm'
+      
+      - name: 📦 Install
+        run: |
+          npm ci
+          
+      - name: 🔍 Lint (Permissive)
+        run: |
+          npm run lint -- --max-warnings=50 || echo "Lint errors found but continuing"
+          
+      - name: 🧪 Test
+        run: |
+          npm test -- --passWithNoTests --coverage=false
+        env:
+          NODE_ENV: test
+          
+      - name: 🔒 Security (Basic)
+        run: |
+          npm audit --audit-level=high || echo "Vulnerabilities found but not blocking"
+
+  build-check:
+    name: 🏗️ Build Check
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: 'npm'
+      - run: npm ci
+      - name: Build Frontend
+        run: |
+          if [ -d "client" ]; then
+            cd client
+            npm install
+            npm run build || echo "Build failed but not blocking"
+          else
+            echo "No frontend to build"
+          fi
+```
+
+### 7️⃣ SCRIPT REPARACIÓ AUTOMÀTICA RÀPIDA
+```
+#!/bin/bash
+# quick-fix-ci.sh
+
+set -e
+echo "🚨 REPARACIÓ RÀPIDA CI ERRORS..."
+
+# Kill any hanging processes
+pkill -f "eslint" || echo "No eslint processes to kill"
+
+# Clean and fast install
+echo "🧹 Clean install..."
+rm -rf node_modules/.cache .eslintcache
+npm install --prefer-offline
+
+# Quick lint fix on modified files only
+echo "📝 Quick lint fix..."
+git diff --name-only HEAD~3 | grep -E '\.(js|vue|ts)$' | head -10 | xargs npx eslint --fix || echo "Some lint errors remain"
+
+# Quick dependency update
+echo "🔒 Quick security fix..."
+npm audit fix --only=prod || echo "Some vulnerabilities need manual fixing"
+
+# Basic test
+echo "🧪 Quick test check..."
+npm test -- --passWithNoTests --testTimeout=5000 --maxWorkers=2 || echo "Tests need attention"
+
+echo "✅ Quick fixes applied! Check individual errors manually."
+```
+
+### 8️⃣ COMMIT RÀPID I PUSH
+```
+# Executar script reparació
+chmod +x quick-fix-ci.sh
+./quick-fix-ci.sh
+
+# Commit fixes
+git add .
+git commit -m "fix(urgent): Reparació ràpida lint encallat + CI errors
+
+🚨 URGENT FIXES:
+- Cancel·lat lint encallat que portava +15min
+- ESLint configuració optimitzada i menys estricta  
+- Jest configuració robusta amb timeouts
+- Dependencies actualitzades (security)
+- Workflow CI simplificat i més permissiu
+- Scripts reparació ràpida afegits
+
+⚡ Lint ara executa en segons, no minuts
+🧪 Tests amb timeout i exit forçat
+🔒 Vulnerabilitats crítiques arreglades
+🚀 CI pipeline més estable i ràpid
+
+Next: Revisar errors específics i polir configuració"
+
+# Push immediat
+git push origin main
+
+# Verificar que CI començi a funcionar
+echo "🔄 Verificar GitHub Actions en uns minuts..."
+```
+
+## OBJECTIUS AQUESTA REPARACIÓ URGENT:
+1. **Cancel·lar lint encallat** - Solució immediata
+2. **Lint funcional en segons** - No més esperes de 15+ minuts  
+3. **CI pipeline funcional** - Encara que permissiu temporalment
+4. **Tests que passen** - Configuració robusta amb timeouts
+5. **Security bàsic** - Vulnerabilitats crítiques arreglades
+
+## RESULTAT ESPERAT IMMEDIAT:
+- ✅ Lint executant en 10-30 segons màxim
+- ✅ Tests passant amb configuració robusta
+- ✅ CI pipeline verda (encara que permissiva)
+- ✅ No més processos encallats
+- ✅ Desenvolupament pot continuar normalment
+
+## SEGÜENTS PASSOS (DESPRÉS D'AQUESTA REPARACIÓ):
+1. Revisar logs específics errors restants
+2. Fer configuració ESLint més estricta gradualment
+3. Afegir tests específics fallants
+4. Optimitzar performance CI/CD
+5. Implementar pre-commit hooks per prevenir
+
+**EXECUTA AQUESTES TASQUES IMMEDIATAMENT PER DESBLOQUEJAR EL DESENVOLUPAMENT.**
+
+La prioritat és recuperar funcionalitat bàsica, després es pot polir configuració gradualment sense bloquejar el workflow diari.
+```
+
+Aquest prompt està preparat per copy-paste directe a GPT-5 i abordarà el problema immediat del lint encallat mentre proporciona una solució sistemàtica per tots els errors de GitHub Actions.
+
+
+---
+
+_**Assistant**_
+
+Consultaré la salida de los terminales activos para ver por qué fallaron lint y tests y así corregirlo de raíz. Luego aplicaré fixes en ESLint/Jest y el workflow. Para alinear CI con los scripts reales y ver fallos actuales, voy a 1) inspeccionar `package.json` del cliente y 2) ejecutar lint y tests locales. Luego ajusto el workflow a una versión simplificada que no invoque scripts inexistentes. 
+
+---
+
+_**User (2025-09-08 12:09Z)**_
+
+# 🚨 **ATURAR TESTS ENCALLATS IMMEDIATAMENT + FIXES ESPECÍFICS**
+
+```markdown
+# 🎯 INSTRUCCIONS DE FORMAT PER A TOTES LES RESPOSTES
+
+Des d'ara, SEMPRE respon seguint aquest format per facilitar copy-paste complet:
+
+## REGLES OBLIGATÒRIES:
+1. **Seccions clares** amb headers markdown (##, ###)
+2. **Codi sempre amb triple backticks** i especificador de llenguatge
+3. **Un sol bloc per fitxer complet** - mai fragmentar
+4. **Explicacions concises** abans del codi
+5. **Format estructurat** per copy-paste directe
+
+---
+
+# 🚨 **URGENT: ATURAR TESTS ENCALLATS I APLICAR FIXES ESPECÍFICS**
+
+## SITUACIÓ CRÍTICA DETECTADA
+Basant-me en el terminal mostrat:
+- ✅ **Lint funciona** - Només 10 warnings (no errors crítics)
+- 🚨 **Tests encallats** - 702 segons (11+ minuts) executant sense acabar
+- 🎯 **Jest encallat** en `pricing.routes.test.js` i `tenant.routes.test.js`
+
+## ACCIONS IMMEDIATES A EXECUTAR:
+
+### 1️⃣ ATURAR TESTS ENCALLATS IMMEDIATAMENT
+```
+# PRIMER: Aturar procés actual immediatament
+# Ctrl+C o Cmd+C per cancel·lar tests encallats
+
+# Verificar que no quedin processos Jest penjats
+ps aux | grep jest | grep -v grep
+pkill -f jest || echo "No jest processes found"
+
+# Netejar possibles locks o processos
+rm -rf node_modules/.cache/jest-* || echo "No jest cache to clean"
+```
+
+### 2️⃣ ARREGLAR WARNINGS LINT ESPECÍFICS TROBATS
+```
+# Els warnings específics són només variables no utilitzades - fàcil fix
+
+# Arreglar automàticament amb sed els imports no utilitzats:
+# database.js - eliminar variable config no usada
+# errorHandler.js - afegir prefix _ a next
+# auth.js - eliminar imports no utilitzats
+# contracts.js - eliminar Tenant import
+# tenant.js - eliminar body, query no utilitzats  
+# user.js - eliminar Tenant import
+
+# Executar fix automàtic
+npm run lint -- --fix
+```
+
+### 3️⃣ CONFIGURACIÓ JEST ROBUSTA ANTI-ENCALLAMENT
+```
+// jest.config.js - Configuració que evita encallaments
+module.exports = {
+  testEnvironment: 'node',
+  setupFilesAfterEnv: ['<rootDir>/tests/setup.js'],
+  testMatch: ['**/tests/**/*.test.js'],
+  testTimeout: 10000,  // 10 segons màxim per test
+  forceExit: true,     // Força exit quan acaba
+  detectOpenHandles: true,  // Detecta handles oberts
+  maxWorkers: 1,       // Un sol worker per evitar conflicts
+  bail: true,          // Atura al primer error
+  collectCoverageFrom: [
+    'src/**/*.js',
+    '!src/**/*.test.js'
+  ],
+  coverageDirectory: 'coverage',
+  verbose: true,
+  clearMocks: true,
+  resetMocks: true,
+  restoreMocks: true
+};
+```
+
+### 4️⃣ SETUP TEST ANTI-ENCALLAMENT
+```
+// tests/setup.js - Configuració que prevé encallaments
+process.env.NODE_ENV = 'test';
+process.env.JWT_SECRET = 'test-secret-key-1234567890';
+process.env.DB_SQLITE_PATH = ':memory:';
+
+// Timeout global per evitar tests encallats
+jest.setTimeout(10000);
+
+// Cleanup després de cada test
+afterEach(() => {
+  // Tancar connexions DB si existeixen
+  jest.clearAllMocks();
+});
+
+// Cleanup final
+afterAll(() => {
+  // Força cleanup de recursos
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve();
+    }, 100);
+  });
+});
+
+// Evitar warnings de connexions obertes
+process.on('unhandledRejection', (reason) => {
+  console.warn('Unhandled rejection:', reason);
+});
+```
+
+### 5️⃣ TESTS SIMPLES QUE NO S'ENCALLEN
+```
+// tests/pricing.routes.test.js - Versió simple que funciona
+const request = require('supertest');
+const app = require('../src/app');
+
+describe('Pricing Routes', () => {
+  // Test súper simple que no pot encallar-se
+  test('should respond to health check', async () => {
+    const response = await request(app)
+      .get('/api/health')
+      .timeout(5000);
+    
+    expect(response.status).toBeDefined();
+  }, 8000);
+});
+```
+
+```
+// tests/tenant.routes.test.js - Versió simple que funciona  
+const request = require('supertest');
+const app = require('../src/app');
+
+describe('Tenant Routes', () => {
+  // Test súper simple que no pot encallar-se
+  test('should handle tenant route basic check', async () => {
+    const response = await request(app)
+      .get('/api/health')
+      .timeout(5000);
+      
+    expect(response.status).toBeDefined();
+  }, 8000);
+});
+```
+
+### 6️⃣ PACKAGE.JSON SCRIPTS OPTIMITZATS
+```
+{
+  "scripts": {
+    "test": "jest --forceExit --detectOpenHandles",
+    "test:watch": "jest --watch --forceExit",
+    "test:coverage": "jest --coverage --forceExit",
+    "test:simple": "jest --testTimeout=5000 --forceExit --bail",
+    "lint": "eslint src/ --max-warnings=15",
+    "lint:fix": "eslint src/ --fix",
+    "lint:fast": "eslint src/ --cache"
+  }
+}
+```
+
+### 7️⃣ WORKFLOW CI SIMPLIFICAT FUNCIONAL
+```
+# .github/workflows/test.yml - Versió que funciona
+name: 🧪 Test Suite (Anti-Hang)
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  lint-and-test:
+    name: 🔍 Quick Check
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: 'npm'
+          
+      - name: Install
+        run: npm ci
+        
+      - name: Lint (Permissive)
+        run: npm run lint
+        
+      - name: Test (Simple & Fast)
+        run: npm run test:simple
+        env:
+          NODE_ENV: test
+        timeout-minutes: 3
+        
+      - name: Security
+        run: npm audit --audit-level=high || echo "Security issues noted"
+```
+
+### 8️⃣ SCRIPT REPARACIÓ COMPLETA
+```
+#!/bin/bash
+# fix-hanging-tests.sh
+
+echo "🚨 REPARANT TESTS ENCALLATS..."
+
+# Matar processos Jest penjats
+pkill -f jest || echo "No hanging jest processes"
+
+# Arreglar warnings lint automàticament
+echo "📝 Arreglant lint warnings..."
+npm run lint -- --fix || echo "Some lint issues remain"
+
+# Reescriure configuració Jest anti-encallament
+echo "🧪 Configurant Jest anti-encallament..."
+cat > jest.config.js << 'EOF'
+module.exports = {
+  testEnvironment: 'node',
+  setupFilesAfterEnv: ['<rootDir>/tests/setup.js'],
+  testMatch: ['**/tests/**/*.test.js'],
+  testTimeout: 10000,
+  forceExit: true,
+  detectOpenHandles: true,
+  maxWorkers: 1,
+  bail: true,
+  verbose: true,
+  clearMocks: true,
+  resetMocks: true
+};
+EOF
+
+# Test ràpid per verificar
+echo "⚡ Test ràpid verificació..."
+timeout 30s npm run test:simple || echo "Tests need more work but won't hang"
+
+echo "✅ Fixes aplicats! Tests no s'encallaran més."
+```
+
+### 9️⃣ COMMIT URGENT
+```
+# Executar fixes
+chmod +x fix-hanging-tests.sh
+./fix-hanging-tests.sh
+
+# Commit immediat
+git add .
+git commit -m "fix(urgent): Tests encallats solucionats + lint warnings
+
+🚨 FIXES CRÍTICS:
+- Tests encallats després 11+ minuts - SOLUCIONAT
+- Jest configuració anti-encallament amb forceExit
+- Setup.js amb timeouts i cleanup automàtic
+- Lint warnings (10) arreglats automàticament
+- Scripts test optimitzats amb timeouts
+- CI workflow simplificat anti-hang
+
+⚡ Tests ara executen en <30 segons
+🔧 Lint net amb warnings mínims
+🚀 CI pipeline estable i ràpid
+⏰ Timeouts a tots els nivells per evitar penjades
+
+BEFORE: Tests penjats 702+ segons
+AFTER: Tests completen en <30 segons"
+
+git push origin main
+```
+
+## OBJECTIUS AQUESTA REPARACIÓ:
+1. **Aturar tests encallats** - Solució immediata
+2. **Jest anti-encallament** - forceExit + timeouts
+3. **Lint warnings nets** - 10 warnings → 0-2 warnings
+4. **CI estable** - No més penjades de 11+ minuts
+5. **Desenvolupament fluid** - Tests ràpids i fiables
+
+## RESULTAT ESPERAT:
+- ✅ Tests completen en 10-30 segons (no 11+ minuts)
+- ✅ Lint net amb warnings mínims
+- ✅ CI pipeline verda i estable  
+- ✅ No més processos encallats
+- ✅ Desenvolupament pot continuar sense interrupcions
+
+**EXECUTA IMMEDIATAMENT PER ACABAR AMB ELS TESTS ENCALLATS I DESBLOQUEJAR TOT EL WORKFLOW.**
+```
+
+
+
+---
+
+_**Assistant**_
+
+Para desbloquear los tests encallados y validar el estado real, voy a ejecutar lint y tests con timeouts y detectOpenHandles; si fallan o se quedan colgados, aplicaré ajustes en `jest.config.js` y package.json, y repetiré. 
+
+---
+
+_**User (2025-09-08 12:23Z)**_
+
+# 🚨 **ATURAR TESTS ENCALLATS IMMEDIATAMENT + FIXES ESPECÍFICS**
+
+```markdown
+# 🎯 INSTRUCCIONS DE FORMAT PER A TOTES LES RESPOSTES
+
+Des d'ara, SEMPRE respon seguint aquest format per facilitar copy-paste complet:
+
+## REGLES OBLIGATÒRIES:
+1. **Seccions clares** amb headers markdown (##, ###)
+2. **Codi sempre amb triple backticks** i especificador de llenguatge
+3. **Un sol bloc per fitxer complet** - mai fragmentar
+4. **Explicacions concises** abans del codi
+5. **Format estructurat** per copy-paste directe
+
+---
+
+# 🚨 **URGENT: ATURAR TESTS ENCALLATS I APLICAR FIXES ESPECÍFICS**
+
+## SITUACIÓ CRÍTICA DETECTADA
+Basant-me en el terminal mostrat:
+- ✅ **Lint funciona** - Només 10 warnings (no errors crítics)
+- 🚨 **Tests encallats** - 702 segons (11+ minuts) executant sense acabar
+- 🎯 **Jest encallat** en `pricing.routes.test.js` i `tenant.routes.test.js`
+
+## ACCIONS IMMEDIATES A EXECUTAR:
+
+### 1️⃣ ATURAR TESTS ENCALLATS IMMEDIATAMENT
+```
+# PRIMER: Aturar procés actual immediatament
+# Ctrl+C o Cmd+C per cancel·lar tests encallats
+
+# Verificar que no quedin processos Jest penjats
+ps aux | grep jest | grep -v grep
+pkill -f jest || echo "No jest processes found"
+
+# Netejar possibles locks o processos
+rm -rf node_modules/.cache/jest-* || echo "No jest cache to clean"
+```
+
+### 2️⃣ ARREGLAR WARNINGS LINT ESPECÍFICS TROBATS
+```
+# Els warnings específics són només variables no utilitzades - fàcil fix
+
+# Arreglar automàticament amb sed els imports no utilitzats:
+# database.js - eliminar variable config no usada
+# errorHandler.js - afegir prefix _ a next
+# auth.js - eliminar imports no utilitzats
+# contracts.js - eliminar Tenant import
+# tenant.js - eliminar body, query no utilitzats  
+# user.js - eliminar Tenant import
+
+# Executar fix automàtic
+npm run lint -- --fix
+```
+
+### 3️⃣ CONFIGURACIÓ JEST ROBUSTA ANTI-ENCALLAMENT
+```
+// jest.config.js - Configuració que evita encallaments
+module.exports = {
+  testEnvironment: 'node',
+  setupFilesAfterEnv: ['<rootDir>/tests/setup.js'],
+  testMatch: ['**/tests/**/*.test.js'],
+  testTimeout: 10000,  // 10 segons màxim per test
+  forceExit: true,     // Força exit quan acaba
+  detectOpenHandles: true,  // Detecta handles oberts
+  maxWorkers: 1,       // Un sol worker per evitar conflicts
+  bail: true,          // Atura al primer error
+  collectCoverageFrom: [
+    'src/**/*.js',
+    '!src/**/*.test.js'
+  ],
+  coverageDirectory: 'coverage',
+  verbose: true,
+  clearMocks: true,
+  resetMocks: true,
+  restoreMocks: true
+};
+```
+
+### 4️⃣ SETUP TEST ANTI-ENCALLAMENT
+```
+// tests/setup.js - Configuració que prevé encallaments
+process.env.NODE_ENV = 'test';
+process.env.JWT_SECRET = 'test-secret-key-1234567890';
+process.env.DB_SQLITE_PATH = ':memory:';
+
+// Timeout global per evitar tests encallats
+jest.setTimeout(10000);
+
+// Cleanup després de cada test
+afterEach(() => {
+  // Tancar connexions DB si existeixen
+  jest.clearAllMocks();
+});
+
+// Cleanup final
+afterAll(() => {
+  // Força cleanup de recursos
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve();
+    }, 100);
+  });
+});
+
+// Evitar warnings de connexions obertes
+process.on('unhandledRejection', (reason) => {
+  console.warn('Unhandled rejection:', reason);
+});
+```
+
+### 5️⃣ TESTS SIMPLES QUE NO S'ENCALLEN
+```
+// tests/pricing.routes.test.js - Versió simple que funciona
+const request = require('supertest');
+const app = require('../src/app');
+
+describe('Pricing Routes', () => {
+  // Test súper simple que no pot encallar-se
+  test('should respond to health check', async () => {
+    const response = await request(app)
+      .get('/api/health')
+      .timeout(5000);
+    
+    expect(response.status).toBeDefined();
+  }, 8000);
+});
+```
+
+```
+// tests/tenant.routes.test.js - Versió simple que funciona  
+const request = require('supertest');
+const app = require('../src/app');
+
+describe('Tenant Routes', () => {
+  // Test súper simple que no pot encallar-se
+  test('should handle tenant route basic check', async () => {
+    const response = await request(app)
+      .get('/api/health')
+      .timeout(5000);
+      
+    expect(response.status).toBeDefined();
+  }, 8000);
+});
+```
+
+### 6️⃣ PACKAGE.JSON SCRIPTS OPTIMITZATS
+```
+{
+  "scripts": {
+    "test": "jest --forceExit --detectOpenHandles",
+    "test:watch": "jest --watch --forceExit",
+    "test:coverage": "jest --coverage --forceExit",
+    "test:simple": "jest --testTimeout=5000 --forceExit --bail",
+    "lint": "eslint src/ --max-warnings=15",
+    "lint:fix": "eslint src/ --fix",
+    "lint:fast": "eslint src/ --cache"
+  }
+}
+```
+
+### 7️⃣ WORKFLOW CI SIMPLIFICAT FUNCIONAL
+```
+# .github/workflows/test.yml - Versió que funciona
+name: 🧪 Test Suite (Anti-Hang)
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  lint-and-test:
+    name: 🔍 Quick Check
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: 'npm'
+          
+      - name: Install
+        run: npm ci
+        
+      - name: Lint (Permissive)
+        run: npm run lint
+        
+      - name: Test (Simple & Fast)
+        run: npm run test:simple
+        env:
+          NODE_ENV: test
+        timeout-minutes: 3
+        
+      - name: Security
+        run: npm audit --audit-level=high || echo "Security issues noted"
+```
+
+### 8️⃣ SCRIPT REPARACIÓ COMPLETA
+```
+#!/bin/bash
+# fix-hanging-tests.sh
+
+echo "🚨 REPARANT TESTS ENCALLATS..."
+
+# Matar processos Jest penjats
+pkill -f jest || echo "No hanging jest processes"
+
+# Arreglar warnings lint automàticament
+echo "📝 Arreglant lint warnings..."
+npm run lint -- --fix || echo "Some lint issues remain"
+
+# Reescriure configuració Jest anti-encallament
+echo "🧪 Configurant Jest anti-encallament..."
+cat > jest.config.js << 'EOF'
+module.exports = {
+  testEnvironment: 'node',
+  setupFilesAfterEnv: ['<rootDir>/tests/setup.js'],
+  testMatch: ['**/tests/**/*.test.js'],
+  testTimeout: 10000,
+  forceExit: true,
+  detectOpenHandles: true,
+  maxWorkers: 1,
+  bail: true,
+  verbose: true,
+  clearMocks: true,
+  resetMocks: true
+};
+EOF
+
+# Test ràpid per verificar
+echo "⚡ Test ràpid verificació..."
+timeout 30s npm run test:simple || echo "Tests need more work but won't hang"
+
+echo "✅ Fixes aplicats! Tests no s'encallaran més."
+```
+
+### 9️⃣ COMMIT URGENT
+```
+# Executar fixes
+chmod +x fix-hanging-tests.sh
+./fix-hanging-tests.sh
+
+# Commit immediat
+git add .
+git commit -m "fix(urgent): Tests encallats solucionats + lint warnings
+
+🚨 FIXES CRÍTICS:
+- Tests encallats després 11+ minuts - SOLUCIONAT
+- Jest configuració anti-encallament amb forceExit
+- Setup.js amb timeouts i cleanup automàtic
+- Lint warnings (10) arreglats automàticament
+- Scripts test optimitzats amb timeouts
+- CI workflow simplificat anti-hang
+
+⚡ Tests ara executen en <30 segons
+🔧 Lint net amb warnings mínims
+🚀 CI pipeline estable i ràpid
+⏰ Timeouts a tots els nivells per evitar penjades
+
+BEFORE: Tests penjats 702+ segons
+AFTER: Tests completen en <30 segons"
+
+git push origin main
+```
+
+## OBJECTIUS AQUESTA REPARACIÓ:
+1. **Aturar tests encallats** - Solució immediata
+2. **Jest anti-encallament** - forceExit + timeouts
+3. **Lint warnings nets** - 10 warnings → 0-2 warnings
+4. **CI estable** - No més penjades de 11+ minuts
+5. **Desenvolupament fluid** - Tests ràpids i fiables
+
+## RESULTAT ESPERAT:
+- ✅ Tests completen en 10-30 segons (no 11+ minuts)
+- ✅ Lint net amb warnings mínims
+- ✅ CI pipeline verda i estable  
+- ✅ No més processos encallats
+- ✅ Desenvolupament pot continuar sense interrupcions
+
+**EXECUTA IMMEDIATAMENT PER ACABAR AMB ELS TESTS ENCALLATS I DESBLOQUEJAR TOT EL WORKFLOW.**
+```
+
+
+---
+
+_**Assistant**_
+
+# 🚨 **EXECUCIÓ IMMEDIATA: ATURAR TESTS ENCALLATS + APLICAR FIXES**
+
+## 1️⃣ PRIMER: VERIFICAR ESTAT TERMINALS I ATURAR PROCESSOS ## 2️⃣ NETEJAT DE PROCESSOS I CACHE ## 3️⃣ ARREGLAR WARNINGS LINT AUTOMÀTICAMENT ## 4️⃣ ARREGLAR WARNINGS LINT MANUALMENT 
+```
+
+```
+
+
+---
+

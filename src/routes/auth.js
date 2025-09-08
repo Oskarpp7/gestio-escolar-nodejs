@@ -1,6 +1,5 @@
 const express = require('express');
-const { body, param, query } = require('express-validator');
-const bcrypt = require('bcryptjs');
+const { body } = require('express-validator');
 const AuthMiddleware = require('../middleware/auth');
 const { handleValidation, catchAsync } = require('../middleware/errorHandler');
 const { User, Tenant } = require('../models');
@@ -251,7 +250,7 @@ router.post('/forgot-password', [
   }
 
   // Generar token de reset
-  const resetToken = user.generatePasswordResetToken();
+  user.generatePasswordResetToken();
   await user.save();
 
   // TODO: Enviar email amb token de reset

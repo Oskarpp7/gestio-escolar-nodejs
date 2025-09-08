@@ -1,5 +1,5 @@
 const express = require('express');
-const { body, param, query } = require('express-validator');
+const { param } = require('express-validator');
 const { handleValidation, catchAsync } = require('../middleware/errorHandler');
 const { Tenant } = require('../models');
 const TenantMiddleware = require('../middleware/tenant');
