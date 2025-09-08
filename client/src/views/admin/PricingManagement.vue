@@ -9,6 +9,47 @@
     </div>
 
     <div class="card">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
+        <div>
+          <label class="label">Servei</label>
+          <select v-model="filters.service_type" class="input">
+            <option value="">Tots</option>
+            <option value="MENJADOR">MENJADOR</option>
+            <option value="ACOLLIDA">ACOLLIDA</option>
+          </select>
+        </div>
+        <div>
+          <label class="label">Contracte</label>
+          <select v-model="filters.contract_type" class="input">
+            <option value="">Tots</option>
+            <option value="FIXE">FIXE</option>
+            <option value="ESPORADIC">ESPORADIC</option>
+          </select>
+        </div>
+        <div>
+          <label class="label">Subtipus</label>
+          <select v-model="filters.subtype" class="input">
+            <option value="">Tots</option>
+            <option value="MATI">MATI</option>
+            <option value="TARDA">TARDA</option>
+          </select>
+        </div>
+        <div>
+          <label class="label">Actiu</label>
+          <select v-model="filters.is_active" class="input">
+            <option value="">Tots</option>
+            <option value="true">Actius</option>
+            <option value="false">Inactius</option>
+          </select>
+        </div>
+      </div>
+      <div class="mt-3 flex gap-2 justify-end">
+        <button class="btn btn-secondary" @click="resetFilters">Netejar</button>
+        <button class="btn btn-primary" @click="applyFilters">Aplicar</button>
+      </div>
+    </div>
+
+    <div class="card">
       <PriceConfigTable
         :items="items"
         :loading="loading"
@@ -47,6 +88,8 @@ const page = ref(1)
 const limit = ref(20)
 const total = ref(0)
 
+const filters = ref({ service_type: '', contract_type: '', subtype: '', is_active: '' })
+
 const showForm = ref(false)
 const editing = ref(null)
 
@@ -54,9 +97,15 @@ const fetchList = async () => {
   if (!tenantId.value) return
   loading.value = true
   try {
-    const res = await listPricingConfigs({ page: page.value, limit: limit.value, tenantId: tenantId.value })
+  const params = { page: page.value, limit: limit.value, tenantId: tenantId.value }
+  if (filters.value.service_type) params.service_type = filters.value.service_type
+  if (filters.value.contract_type) params.contract_type = filters.value.contract_type
+  if (filters.value.subtype !== '') params.subtype = filters.value.subtype
+  if (filters.value.is_active !== '') params.is_active = filters.value.is_active
+  const res = await listPricingConfigs(params)
     items.value = res.data || res.items || []
-    total.value = res.total || res.count || items.value.length
+  const pag = res.pagination
+  total.value = (pag && (pag.total || pag.count)) || res.total || res.count || items.value.length
   } catch (e) {
     console.error(e)
     toast.error('No s\'ha pogut carregar la llista')
@@ -106,4 +155,15 @@ watch(tenantId, () => {
 onMounted(() => {
   // es carrega quan es seleccioni un centre
 })
+
+function resetFilters() {
+  filters.value = { service_type: '', contract_type: '', subtype: '', is_active: '' }
+  page.value = 1
+  fetchList()
+}
+
+function applyFilters() {
+  page.value = 1
+  fetchList()
+}
 </script>

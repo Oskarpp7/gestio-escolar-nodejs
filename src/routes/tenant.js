@@ -3,6 +3,7 @@ const { body, param, query } = require('express-validator');
 const { handleValidation, catchAsync } = require('../middleware/errorHandler');
 const { Tenant } = require('../models');
 const TenantMiddleware = require('../middleware/tenant');
+const AuthMiddleware = require('../middleware/auth');
 
 const router = express.Router();
 
@@ -83,3 +84,31 @@ router.get('/info', [
 }));
 
 module.exports = router;
+
+/**
+ * RUTES PROTEGIDES (llistat de centres)
+ */
+
+/**
+ * @route   GET /api/tenant/list
+ * @desc    Llistar centres actius
+ * @access  Privat (SUPER_ADMIN veu tots; altres només el seu)
+ */
+router.get('/list', [
+  AuthMiddleware.verifyToken
+], catchAsync(async (req, res) => {
+  let tenants
+  if (req.user.role === 'SUPER_ADMIN') {
+    tenants = await Tenant.getActiveTenants()
+  } else {
+    // Retornar només el tenant de l'usuari
+    tenants = []
+    const me = await Tenant.findByPk(req.user.tenant_id)
+    if (me && me.isActive()) tenants.push(me)
+  }
+
+  res.json({
+    success: true,
+    data: tenants.map(t => ({ id: t.id, code: t.code, name: t.name, short_name: t.short_name }))
+  })
+}));

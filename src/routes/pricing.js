@@ -22,6 +22,10 @@ router.get('/tenant/:tenantId', auth.verifyToken, auth.requireTenantAccess, asyn
 // GET: Llistar registres de configuració (paginat)
 router.get('/', auth.verifyToken, requireAdmin, [
   query('tenant_id').optional().isUUID(),
+  query('service_type').optional().isIn(['MENJADOR', 'ACOLLIDA']),
+  query('contract_type').optional().isIn(['FIXE', 'ESPORADIC']),
+  query('subtype').optional().isIn(['MATI', 'TARDA', '']),
+  query('is_active').optional().isBoolean().toBoolean(),
   query('page').optional().isInt({ min: 1 }),
   query('limit').optional().isInt({ min: 1, max: 100 })
 ], async (req, res) => {
@@ -30,10 +34,14 @@ router.get('/', auth.verifyToken, requireAdmin, [
     return res.status(400).json({ success: false, errors: errors.array() });
   }
   try {
-    const { tenant_id, page = 1, limit = 20 } = req.query;
-    const where = {};
+  const { tenant_id, service_type, contract_type, subtype, is_active, page = 1, limit = 20 } = req.query;
+  const where = {};
     if (tenant_id) where.tenant_id = tenant_id;
     if (req.user.role !== 'SUPER_ADMIN') where.tenant_id = req.tenantId;
+  if (service_type) where.service_type = service_type;
+  if (contract_type) where.contract_type = contract_type;
+  if (typeof is_active !== 'undefined') where.is_active = is_active;
+  if (typeof subtype !== 'undefined' && subtype !== '') where.subtype = subtype;
 
     const offset = (parseInt(page) - 1) * parseInt(limit);
     const { count, rows } = await TenantPriceConfig.findAndCountAll({
