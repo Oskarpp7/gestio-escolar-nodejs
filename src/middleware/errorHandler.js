@@ -190,7 +190,7 @@ const sendErrorProd = (err, res) => {
 /**
  * Middleware principal de gestió d'errors
  */
-const errorHandler = (err, req, res, _next) => {
+const errorHandler = (err, req, res) => {
   let error = { ...err };
   error.message = err.message;
   

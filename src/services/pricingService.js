@@ -74,7 +74,12 @@ function invalidateTenantPricing(tenantId) {
   cache.del(keyFor(tenantId));
 }
 
+function clearCache() {
+  cache.flushAll();
+}
+
 module.exports = {
   loadTenantPricing,
-  invalidateTenantPricing
+  invalidateTenantPricing,
+  clearCache
 };

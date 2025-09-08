@@ -21,13 +21,13 @@ afterEach(() => {
 
 // Cleanup final
 afterAll(async () => {
-  await sequelize.close();
+  try {
+    await sequelize.close();
+  } catch (_) {
+    // ignorar: pot estar ja tancada
+  }
   // Força cleanup de recursos
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve();
-    }, 100);
-  });
+  return new Promise((resolve) => setTimeout(resolve, 50));
 });
 
 // Evitar warnings de connexions obertes
