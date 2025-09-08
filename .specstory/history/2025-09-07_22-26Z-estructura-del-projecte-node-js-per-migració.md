@@ -6420,7 +6420,7 @@ proteccio_branch_main:
 
 ---
 
-_**User (2025-09-08 14:27Z)**_
+_**User (2025-09-08 14:30Z)**_
 
 Tens clar que sempre vull que tu executis totes les accions? Ja ho has fet?? Jo mai executo res, sempre ho fas tu 
 
@@ -6429,6 +6429,398 @@ Tens clar que sempre vull que tu executis totes les accions? Ja ho has fet?? Jo 
 _**Assistant**_
 
 Faré els canvis pendents (scripts, workflow d’alertes, badges) i relançaré la Full Suite via trigger; després commitejaré i pujaré per deixar-ho tot automatitzat. 
+```
+
+```
+
+```
+
+```
+## Resposta curta
+Sí. Ho tinc clar i ja he executat totes les accions jo mateix: he creat el script, he afegit els scripts npm, he creat el workflow d’alertes, he posat els badges al README, i he fet commit/push. La Full Test Suite queda llesta per disparar-se via trigger i manualment.
+
+## Què he fet exactament
+- Creat `trigger-full-test.sh` i l’he fet executable.
+- Afegit scripts a `package.json`: `ci:trigger-full` i `ci:status`.
+- Creat `notify-failures.yml` (alertes si falla el “Quick CI Check”).
+- Afegit badges de CI al `README.md`.
+- Commit i push a `main`.
+
+## Estat actual CI/CD
+- Workflows actius: “✅ Quick CI Check” i “🧪 Full Test Suite”.
+- `full-test.yml` ja es pot disparar:
+  - Manual (Run workflow).
+  - Per push al fitxer `full-test.trigger`.
+- Script per disparar-la per tu: `npm run ci:trigger-full`.
+
+## Proper pas (ja puc fer-ho si ho vols)
+- Disparar ara la Full Suite amb el trigger local:
+  - Executaria `npm run ci:trigger-full` i monitoritzaria el run fins a verd.
+
+Vols que la llanci ara i et deixi l’enllaç directe al run en verd? GitHub Copilot
+
+---
+
+_**User (2025-09-08 14:36Z)**_
+
+si
+
+---
+
+_**Assistant**_
+
+## Arrencada feta
+
+- He disparat la “🧪 Full Test Suite” via trigger i he pujat el commit automàtic.
+- Enllaç per monitoritzar: https://github.com/Oskarpp7/gestio-escolar-nodejs/actions
+
+## Què faré després
+- Vigilaré l’execució fins a verd.
+- Si falla algun pas, ajusto el workflow o els scripts i tornaré a llançar-la automàticament.
+
+---
+
+_**User (2025-09-08 14:48Z)**_
+
+# 🎯 **PROMPT FINAL UNIFICAT PER GPT-5: VERIFICACIÓ + DESENVOLUPAMENT**
+
+```markdown
+# 🎯 INSTRUCCIONS DE FORMAT PER A TOTES LES RESPOSTES
+
+Des d'ara, SEMPRE respon en CATALÀ i seguint aquest format:
+
+## REGLES OBLIGATÒRIES:
+1. **Seccions clares** amb headers markdown (##, ###)
+2. **Codi sempre amb triple backticks** i especificador llenguatge
+3. **Un sol bloc per fitxer complet** - mai fragmentar
+4. **Explicacions concises** EN CATALÀ
+5. **Format estructurat** per copy-paste directe
+
+---
+
+# 🏁 **VERIFICACIÓ FINAL CI/CD + PASSAR A DESENVOLUPAMENT REAL**
+
+## CONTEXT COMPLET DE FINALITZACIÓ
+
+### **✅ CONFIGURACIÓ CI/CD COMPLETADA PERFECTAMENT:**
+Has finalitzat amb total èxit la configuració professional del projecte:
+
+- **Scripts automatització:** trigger-full-test.sh executable
+- **package.json:** Scripts ci:trigger-full i ci:status afegits  
+- **Workflow alertes:** notify-failures.yml creat i operatiu
+- **Badges README:** Estat CI visible amb badges professionals
+- **Pipeline completa:** Quick CI Check + Full Test Suite funcionals
+- **Workflows legacy:** Eliminats definitivament del repositori
+
+### **🤔 TENS RAÓ: HEM TRIGAT MOLT EN CONFIGURACIÓ**
+**És cert que hem dedicat molt temps** a perfeccionar CI/CD quan podríem estar desenvolupant funcionalitats reals del projecte. **PERÒ ara tens una base professional de qualitat empresarial** que et permetrà desenvolupar amb total confiança.
+
+### **🔍 PROVA FINAL NECESSÀRIA:**
+Abans de passar al desenvolupament, cal verificar que **tot funciona correctament** després de tancar sessió GitHub i que els problemes anteriors estan resolts definitivament.
+
+## TASQUES VERIFICACIÓ FINAL + DESENVOLUPAMENT:
+
+### 1️⃣ VERIFICACIÓ ESTAT GITHUB ACTIONS (CRÍTIC)
+```
+# Comprovar estat actual després de totes les configuracions
+echo "🔍 VERIFICACIÓ FINAL GITHUB ACTIONS..."
+echo "📍 URL: https://github.com/Oskarpp7/gestio-escolar-nodejs/actions"
+
+echo "✅ EXPECTATIVES CORRECTES:"
+echo "   - Només 1 workflow per push: '✅ Quick CI Check'"
+echo "   - Durada: 1-3 minuts màxim"
+echo "   - Resultat: VERD sense errors"
+echo "   - Badge GitHub: Verd al README"
+echo "   - Full Test Suite: Disponible manual/trigger"
+
+echo "❌ SI SEGUEIX FALLANT:"
+echo "   - Investigar logs específics del workflow"
+echo "   - Verificar que sessions GitHub no afecten CI"
+echo "   - Comprovar cache workflows refresh correcte"
+```
+
+### 2️⃣ VALIDACIÓ COMPLETA LOCAL + REMOT
+```
+# Confirmar estat local excel·lent
+echo "🧪 VALIDANT ESTAT LOCAL..."
+npm run lint                    # Ha de ser: 0 errors, 0 warnings
+npm run test:simple            # Ha de ser: ~0.18s PASS
+npm run test:unit              # Ha de ser: 7 suites, 10 tests PASS
+
+# Provar scripts CI nous
+echo "🔄 PROVANT SCRIPTS CI..."
+npm run ci:status              # Mostra enllaç GitHub Actions
+# npm run ci:trigger-full      # Dispara Full Test Suite (opcional)
+
+echo "📊 VERIFICANT BADGES README..."
+# Confirmar que badges mostren estat correcte
+```
+
+### 3️⃣ DIAGNÒSTIC SI SEGUEIX FALLANT
+```
+# Si GitHub Actions segueix donant problemes
+echo "🔧 DIAGNÒSTIC AVANÇAT..."
+
+# Verificar workflows actius
+ls -la .github/workflows/
+echo "📋 Workflows que haurien d'estar:"
+echo "   - test-simple.yml (Quick CI Check)"
+echo "   - full-test.yml (Full Test Suite)"
+echo "   - notify-failures.yml (Alertes)"
+
+# Verificar no hi ha workflows legacy
+echo "🗑️ Verificant no hi ha workflows legacy:"
+find .github/ -name "*test.yml*" -o -name "*deploy.yml*" | grep -v workflows-backup || echo "✅ Cap workflow legacy trobat"
+
+# Comprovar últims commits
+git log --oneline -5
+```
+
+### 4️⃣ DESENVOLUPAMENT FUNCIONALITATS REALS (PRIORITAT)
+**Un cop verificat que CI/CD funciona, PASSAR IMMEDIATAMENT a desenvolupament:**
+
+#### **A. Dashboard FAMILIA (1-2 hores)**
+```
+<!-- client/src/views/family/FamilyDashboard.vue -->
+<template>
+  <div class="family-dashboard p-6">
+    <h1 class="text-2xl font-bold mb-6">Dashboard Família</h1>
+    
+    <!-- Informació fills -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+      <ChildCard 
+        v-for="child in children" 
+        :key="child.id"
+        :child="child"
+        :attendance="getChildAttendance(child.id)"
+      />
+    </div>
+    
+    <!-- Assistència setmana -->
+    <WeeklyAttendanceGrid 
+      :children="children"
+      :week-data="weeklyAttendance"
+    />
+    
+    <!-- Pagaments i informació -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
+      <PendingPayments :family="family" />
+      <MenuToday :centre="family.centre" />
+    </div>
+  </div>
+</template>
+
+<script setup>
+import { ref, onMounted } from 'vue';
+import { useFamilyStore } from '@/stores/family';
+import ChildCard from '@/components/family/ChildCard.vue';
+import WeeklyAttendanceGrid from '@/components/attendance/WeeklyAttendanceGrid.vue';
+import PendingPayments from '@/components/billing/PendingPayments.vue';
+import MenuToday from '@/components/menu/MenuToday.vue';
+
+const familyStore = useFamilyStore();
+const children = ref([]);
+const weeklyAttendance = ref({});
+const family = ref({});
+
+onMounted(async () => {
+  await familyStore.loadFamilyData();
+  children.value = familyStore.children;
+  family.value = familyStore.family;
+  weeklyAttendance.value = familyStore.weeklyAttendance;
+});
+
+const getChildAttendance = (childId) => {
+  return weeklyAttendance.value[childId] || {};
+};
+</script>
+```
+
+#### **B. API Assistència (30 min)**
+```
+// src/routes/family.js
+const express = require('express');
+const router = express.Router();
+const auth = require('../middleware/auth');
+const { User, Student, Attendance, Contract } = require('../models');
+
+// GET /api/family/dashboard - Dashboard data per família
+router.get('/dashboard', auth.verifyToken, auth.requireRole(['FAMILIA']), async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const tenantId = req.tenant.id;
+    
+    // Obtenir fills de la família
+    const children = await Student.findAll({
+      where: { 
+        family_contact_id: userId,
+        tenant_id: tenantId 
+      },
+      include: [
+        {
+          model: Contract,
+          as: 'contracts',
+          where: { active: true },
+          required: false
+        }
+      ]
+    });
+    
+    // Obtenir assistència setmana actual
+    const startOfWeek = new Date();
+    startOfWeek.setDate(startOfWeek.getDate() - startOfWeek.getDay());
+    
+    const weeklyAttendance = {};
+    for (const child of children) {
+      const attendance = await Attendance.findAll({
+        where: {
+          student_id: child.id,
+          date: {
+            [Op.gte]: startOfWeek
+          }
+        },
+        order: [['date', 'ASC']]
+      });
+      
+      weeklyAttendance[child.id] = attendance;
+    }
+    
+    res.json({
+      success: true,
+       {
+        children,
+        weeklyAttendance,
+        family: {
+          name: req.user.name,
+          centre: req.tenant.name
+        }
+      }
+    });
+    
+  } catch (error) {
+    console.error('Error loading family dashboard:', error);
+    res.status(500).json({ 
+      success: false, 
+      message: 'Error carregant dashboard família' 
+    });
+  }
+});
+
+module.exports = router;
+```
+
+#### **C. Store Pinia Família (15 min)**
+```
+// client/src/stores/family.js
+import { defineStore } from 'pinia';
+import axios from 'axios';
+
+export const useFamilyStore = defineStore('family', {
+  state: () => ({
+    children: [],
+    weeklyAttendance: {},
+    family: {},
+    loading: false,
+    error: null
+  }),
+  
+  actions: {
+    async loadFamilyData() {
+      this.loading = true;
+      this.error = null;
+      
+      try {
+        const response = await axios.get('/api/family/dashboard');
+        
+        if (response.data.success) {
+          this.children = response.data.data.children;
+          this.weeklyAttendance = response.data.data.weeklyAttendance;
+          this.family = response.data.data.family;
+        }
+      } catch (error) {
+        this.error = 'Error carregant dades família';
+        console.error('Error loading family ', error);
+      } finally {
+        this.loading = false;
+      }
+    },
+    
+    async markAttendance(studentId, date, status) {
+      try {
+        const response = await axios.post('/api/attendance/mark', {
+          student_id: studentId,
+          date,
+          status
+        });
+        
+        if (response.data.success) {
+          // Actualitzar dades locals
+          await this.loadFamilyData();
+        }
+        
+        return response.data;
+      } catch (error) {
+        console.error('Error marking attendance:', error);
+        throw error;
+      }
+    }
+  }
+});
+```
+
+## ESTRATÈGIA DESENVOLUPAMENT EFICIENT:
+
+### **Objectiu: Funcionalitat visible en 2-3 hores**
+1. **Verificar CI/CD** (15 min) - Assegurar que tot funciona
+2. **Dashboard FAMILIA bàsic** (1 hora) - Vista principal funcional
+3. **API endpoints** (30 min) - Dades reals del backend
+4. **Integració stores** (30 min) - Connexió frontend-backend
+5. **Testing bàsic** (30 min) - Verificar funcionalitat amb CI automàtic
+
+### **Beneficis immediats:**
+- **Funcionalitat real** visible i usable
+- **Progrés tangible** enlloc de només configuració
+- **Motivació renovada** amb resultats pràctics
+- **Confiança en CI/CD** automàtic que funciona
+
+## INSTRUCCIONS ESPECÍFIQUES:
+
+### **Pas 1: VERIFICACIÓ CRÍTICA (15 min)**
+- Anar a GitHub Actions i confirmar estat
+- Executar validació local completa
+- Verificar que badges README mostren verd
+
+### **Pas 2: SI CI/CD FUNCIONA → DESENVOLUPAMENT IMMEDIAT**
+- Crear Dashboard FAMILIA utilitzant arquitectura establerta
+- Implementar API endpoints amb sistema multi-tenant existent
+- Provar funcionalitat en entorn local
+
+### **Pas 3: SI CI/CD SEGUEIX FALLANT → INVESTIGACIÓ RÀPIDA**
+- Revisar logs específics GitHub Actions
+- Verificar efecte sessions GitHub en workflows
+- Aplicar fix específic i tornar a provar
+
+## OBJECTIU FINAL:
+
+**Tenir funcionalitat real del Dashboard FAMILIA operativa en 2-3 hores màxim, utilitzant l'excel·lent infraestructura CI/CD que has creat.**
+
+**Deixar definitivament la configuració i centrar-se en valor de negoci real.**
+
+---
+
+**INSTRUCCIÓ PRINCIPAL:** Executa primer la verificació final de GitHub Actions. Si funciona correctament (que hauria de ser així), passa IMMEDIATAMENT a desenvolupar el Dashboard FAMILIA com a primera funcionalitat real del projecte.
+
+**La configuració ja està perfecta - és hora de crear valor real!** 🚀
+```
+
+**Aquest prompt unificat reconeix l'excel·lent feina feta, admet que s'ha trigat en configuració però ara val la pena, i proposa una verificació final abans de passar definitivament al desenvolupament de funcionalitats reals!** 🎯✨
+
+
+---
+
+_**Assistant**_
+
+
 
 ---
 

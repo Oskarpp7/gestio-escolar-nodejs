@@ -8,8 +8,8 @@ const session = require('express-session');
 const SequelizeStore = require('connect-session-sequelize')(session.Store);
 const { createServer } = require('http');
 const { Server } = require('socket.io');
+const path = require('path');
 
-const config = require('./src/config/config');
 const { logger } = require('./src/utils/logger');
 const { sequelize } = require('./src/config/database');
 const socketHandler = require('./src/socket/socketHandler');
@@ -23,6 +23,7 @@ const attendanceRoutes = require('./src/routes/attendance');
 const chatRoutes = require('./src/routes/chat');
 const dashboardRoutes = require('./src/routes/dashboard');
 const reportRoutes = require('./src/routes/report');
+const familyRoutes = require('./src/routes/family');
 const pricingRoutes = require('./src/routes/pricing');
 
 // Middleware personalitzat
@@ -135,6 +136,7 @@ app.use('/api/chat', authMiddleware.verifyToken, chatRoutes);
 app.use('/api/dashboard', authMiddleware.verifyToken, dashboardRoutes);
 app.use('/api/reports', authMiddleware.verifyToken, reportRoutes);
 app.use('/api/pricing', authMiddleware.verifyToken, pricingRoutes);
+app.use('/api/family', authMiddleware.verifyToken, familyRoutes);
 
 // Servir fitxers estàtics (uploads)
 app.use('/uploads', express.static('storage/uploads'));
